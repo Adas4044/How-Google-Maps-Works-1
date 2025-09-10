@@ -181,6 +181,53 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 </Button>
             </div>
 
+            {/* Algorithm selection bar - bottom center for quick selection */}
+            <div className="algo-bar">
+                <Tooltip title="A*">
+                    <Button
+                        onClick={() => {changeAlgorithm("astar");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "astar" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "astar" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
+                    >
+                        A*
+                    </Button>
+                </Tooltip>
+
+                <Tooltip title="Greedy">
+                    <Button
+                        onClick={() => {changeAlgorithm("greedy");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "greedy" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "greedy" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
+                    >
+                        Greedy
+                    </Button>
+                </Tooltip>
+
+                <Tooltip title="Dijkstra">
+                    <Button
+                        onClick={() => {changeAlgorithm("dijkstra");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "dijkstra" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "dijkstra" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
+                    >
+                        Dijkstra
+                    </Button>
+                </Tooltip>
+
+                <Tooltip title="Bidirectional Search">
+                    <Button
+                        onClick={() => {changeAlgorithm("bidirectional");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "bidirectional" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "bidirectional" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 170, height: 44, borderRadius: 22 }}
+                    >
+                        Bidirectional Search
+                    </Button>
+                </Tooltip>
+            </div>
+
             <Backdrop
                 open={showTutorial}
                 onClick={e => {if(e.target.classList.contains("backdrop")) setShowTutorial(false);}}

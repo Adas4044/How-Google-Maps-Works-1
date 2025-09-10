@@ -103,7 +103,7 @@ canvas {
 
 .nav-right {
     position: fixed;
-    left: 24px;
+    right: 24px;
     top: 20px;
     display: flex;
     gap: 20px;
@@ -129,6 +129,49 @@ canvas {
                 display: none;
             }
         }
+    }
+}
+
+/* Bottom algorithm selection bar */
+.algo-bar {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 18px;
+    display: flex;
+    gap: 10px;
+    z-index: 4000;
+    pointer-events: all;
+
+    button {
+        background-color: #404156;
+        color: #fff;
+        border-radius: 22px;
+        padding: 0 16px;
+        min-width: 140px;
+        height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: none;
+        border: 1px solid rgba(255,255,255,0.06);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+        font-weight: 600;
+    }
+
+    button:hover, button:focus {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.55);
+    }
+
+    @media (max-width: 560px) {
+        left: 12px;
+        transform: none;
+        right: 12px;
+        bottom: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
     }
 }
 
