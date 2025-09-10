@@ -226,6 +226,28 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                         Bidirectional Search
                     </Button>
                 </Tooltip>
+
+                <Tooltip title="BFS">
+                    <Button
+                        onClick={() => {changeAlgorithm("bfs");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "bfs" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "bfs" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 120, height: 44, borderRadius: 22 }}
+                    >
+                        BFS
+                    </Button>
+                </Tooltip>
+
+                <Tooltip title="DFS">
+                    <Button
+                        onClick={() => {changeAlgorithm("dfs");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "dfs" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "dfs" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 120, height: 44, borderRadius: 22 }}
+                    >
+                        DFS
+                    </Button>
+                </Tooltip>
             </div>
 
             <Backdrop
@@ -318,10 +340,12 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             size="small"
                             disabled={!animationEnded && started}
                         >
-                            <MenuItem value={"astar"}>A* algorithm</MenuItem>
-                            <MenuItem value={"greedy"}>Greedy algorithm</MenuItem>
-                            <MenuItem value={"dijkstra"}>Dijkstra&apos;s algorithm</MenuItem>
-                            <MenuItem value={"bidirectional"}>Bidirectional Search algorithm</MenuItem>
+                            <MenuItem value={"astar"}>A*</MenuItem>
+                            <MenuItem value={"greedy"}>Greedy</MenuItem>
+                            <MenuItem value={"dijkstra"}>Dijkstra</MenuItem>
+                            <MenuItem value={"bidirectional"}>Bidirectional Search</MenuItem>
+                            <MenuItem value={"bfs"}>BFS</MenuItem>
+                            <MenuItem value={"dfs"}>DFS</MenuItem>
                         </Select>
                     </FormControl>
 
