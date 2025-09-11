@@ -183,72 +183,6 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
             {/* Algorithm selection bar - bottom center for quick selection */}
             <div className="algo-bar">
-                <Tooltip title="A*">
-                    <Button
-                        onClick={() => {changeAlgorithm("astar");}}
-                        disabled={!animationEnded && started}
-                        variant={settings.algorithm === "astar" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "astar" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
-                    >
-                        A*
-                    </Button>
-                </Tooltip>
-
-                <Tooltip title="Greedy">
-                    <Button
-                        onClick={() => {changeAlgorithm("greedy");}}
-                        disabled={!animationEnded && started}
-                        variant={settings.algorithm === "greedy" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "greedy" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
-                    >
-                        Greedy
-                    </Button>
-                </Tooltip>
-
-                <Tooltip title="Dijkstra">
-                    <Button
-                        onClick={() => {changeAlgorithm("dijkstra");}}
-                        disabled={!animationEnded && started}
-                        variant={settings.algorithm === "dijkstra" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "dijkstra" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
-                    >
-                        Dijkstra
-                    </Button>
-                </Tooltip>
-
-                <Tooltip title="Bidirectional Search">
-                    <Button
-                        onClick={() => {changeAlgorithm("bidirectional");}}
-                        disabled={!animationEnded && started}
-                        variant={settings.algorithm === "bidirectional" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "bidirectional" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 170, height: 44, borderRadius: 22 }}
-                    >
-                        Bidirectional Search
-                    </Button>
-                </Tooltip>
-
-                <Tooltip title="Bidirectional A*">
-                    <Button
-                        onClick={() => {changeAlgorithm("bidirectional-astar");}}
-                        disabled={!animationEnded && started}
-                        variant={settings.algorithm === "bidirectional-astar" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "bidirectional-astar" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 170, height: 44, borderRadius: 22 }}
-                    >
-                        Bidirectional A*
-                    </Button>
-                </Tooltip>
-
-                <Tooltip title="Bidirectional A* + Lookup">
-                    <Button
-                        onClick={() => {changeAlgorithm("bidirectional-astar-lookup");}}
-                        disabled={!animationEnded && started}
-                        variant={settings.algorithm === "bidirectional-astar-lookup" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "bidirectional-astar-lookup" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 200, height: 44, borderRadius: 22 }}
-                    >
-                        Bidirectional A* + Lookup
-                    </Button>
-                </Tooltip>
-
                 <Tooltip title="BFS">
                     <Button
                         onClick={() => {changeAlgorithm("bfs");}}
@@ -268,6 +202,61 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                         style={{ backgroundColor: settings.algorithm === "dfs" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 120, height: 44, borderRadius: 22 }}
                     >
                         DFS
+                    </Button>
+                </Tooltip>
+
+                <Tooltip title="Bidirectional BFS">
+                    <Button
+                        onClick={() => {changeAlgorithm("bidirectional");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "bidirectional" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "bidirectional" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 170, height: 44, borderRadius: 22 }}
+                    >
+                        Bidirectional BFS
+                    </Button>
+                </Tooltip>
+
+                <Tooltip title="Greedy">
+                    <Button
+                        onClick={() => {changeAlgorithm("greedy");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "greedy" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "greedy" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
+                    >
+                        Greedy
+                    </Button>
+                </Tooltip>
+
+                <Tooltip title="A*">
+                    <Button
+                        onClick={() => {changeAlgorithm("astar");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "astar" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "astar" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
+                    >
+                        A*
+                    </Button>
+                </Tooltip>
+
+                <Tooltip title="Bidirectional A*">
+                    <Button
+                        onClick={() => {changeAlgorithm("bidirectional-astar");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "bidirectional-astar" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "bidirectional-astar" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 170, height: 44, borderRadius: 22 }}
+                    >
+                        Bidirectional A*
+                    </Button>
+                </Tooltip>
+
+                <Tooltip title="A* + Lookup Table">
+                    <Button
+                        onClick={() => {changeAlgorithm("bidirectional-astar-lookup");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "bidirectional-astar-lookup" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "bidirectional-astar-lookup" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 200, height: 44, borderRadius: 22 }}
+                    >
+                        A* + Lookup Table
                     </Button>
                 </Tooltip>
             </div>
@@ -362,14 +351,13 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             size="small"
                             disabled={!animationEnded && started}
                         >
-                            <MenuItem value={"astar"}>A*</MenuItem>
-                            <MenuItem value={"greedy"}>Greedy</MenuItem>
-                            <MenuItem value={"dijkstra"}>Dijkstra</MenuItem>
-                            <MenuItem value={"bidirectional"}>Bidirectional Search</MenuItem>
-                            <MenuItem value={"bidirectional-astar"}>Bidirectional A*</MenuItem>
-                            <MenuItem value={"bidirectional-astar-lookup"}>Bidirectional A* + Lookup</MenuItem>
                             <MenuItem value={"bfs"}>BFS</MenuItem>
                             <MenuItem value={"dfs"}>DFS</MenuItem>
+                            <MenuItem value={"bidirectional"}>Bidirectional BFS</MenuItem>
+                            <MenuItem value={"greedy"}>Greedy</MenuItem>
+                            <MenuItem value={"astar"}>A*</MenuItem>
+                            <MenuItem value={"bidirectional-astar"}>Bidirectional A*</MenuItem>
+                            <MenuItem value={"bidirectional-astar-lookup"}>A* + Lookup Table</MenuItem>
                         </Select>
                     </FormControl>
 
