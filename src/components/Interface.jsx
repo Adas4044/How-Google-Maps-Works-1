@@ -238,6 +238,17 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                     </Button>
                 </Tooltip>
 
+                <Tooltip title="Bidirectional A* + Lookup">
+                    <Button
+                        onClick={() => {changeAlgorithm("bidirectional-astar-lookup");}}
+                        disabled={!animationEnded && started}
+                        variant={settings.algorithm === "bidirectional-astar-lookup" ? "contained" : "outlined"}
+                        style={{ backgroundColor: settings.algorithm === "bidirectional-astar-lookup" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 200, height: 44, borderRadius: 22 }}
+                    >
+                        Bidirectional A* + Lookup
+                    </Button>
+                </Tooltip>
+
                 <Tooltip title="BFS">
                     <Button
                         onClick={() => {changeAlgorithm("bfs");}}
@@ -356,6 +367,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             <MenuItem value={"dijkstra"}>Dijkstra</MenuItem>
                             <MenuItem value={"bidirectional"}>Bidirectional Search</MenuItem>
                             <MenuItem value={"bidirectional-astar"}>Bidirectional A*</MenuItem>
+                            <MenuItem value={"bidirectional-astar-lookup"}>Bidirectional A* + Lookup</MenuItem>
                             <MenuItem value={"bfs"}>BFS</MenuItem>
                             <MenuItem value={"dfs"}>DFS</MenuItem>
                         </Select>

@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { getBoundingBoxFromPolygon, getMapGraph, getNearestNode } from "../services/MapService";
 import PathfindingState from "../models/PathfindingState";
 import Interface from "./Interface";
+import LookupTablePanel from "./LookupTablePanel";
 import { INITIAL_COLORS, INITIAL_VIEW_STATE, MAP_STYLE } from "../config";
 import useSmoothStateChange from "../hooks/useSmoothStateChange";
 
@@ -29,6 +30,7 @@ function Map() {
     const [settings, setSettings] = useState({ algorithm: "astar", radius: 4, speed: 5 });
     const [colors, setColors] = useState(INITIAL_COLORS);
     const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+    const [lookupTable, setLookupTable] = useState(null);
     const ui = useRef();
     const fadeRadius = useRef();
     const requestRef = useRef();
@@ -152,6 +154,11 @@ function Map() {
         traceNode.current = null;
         traceNode2.current = null;
         setAnimationEnded(false);
+        
+        // Clear lookup table if not using lookup algorithm
+        if (settings.algorithm !== "bidirectional-astar-lookup") {
+            setLookupTable(null);
+        }
     }
 
     // Progress animation by one step
@@ -160,11 +167,18 @@ function Map() {
         for(const updatedNode of updatedNodes) {
             updateWaypoints(updatedNode, updatedNode.referer);
         }
+        
+        // Update lookup table for display during algorithm execution
+        if(settings.algorithm === "bidirectional-astar-lookup" && state.current.algorithm.getLookupTable) {
+            const currentLookupTable = state.current.algorithm.getLookupTable();
+            if (currentLookupTable && currentLookupTable.computed && currentLookupTable !== lookupTable) {
+                setLookupTable(currentLookupTable);
+            }
+        }
 
         // Found end but waiting for animation to end
         if(state.current.finished && !animationEnded) {
-            // Render route differently for bidirectional algorithms
-            if(settings.algorithm === "bidirectional" || settings.algorithm === "bidirectional-astar") {
+            if(settings.algorithm === "bidirectional" || settings.algorithm === "bidirectional-astar" || settings.algorithm === "bidirectional-astar-lookup") {
                 if(!traceNode.current) traceNode.current = updatedNodes[0];
                 const parentNode = traceNode.current.parent;
                 updateWaypoints(parentNode, traceNode.current, "route", Math.max(Math.log2(settings.speed), 1));
@@ -344,6 +358,12 @@ function Map() {
                     />
                 </DeckGL>
             </div>
+
+            <LookupTablePanel 
+                lookupTable={lookupTable}
+                visible={settings.algorithm === "bidirectional-astar-lookup"}
+            />
+
             <Interface 
                 ref={ui}
                 canStart={startNode && endNode}
