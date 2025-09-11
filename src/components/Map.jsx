@@ -163,8 +163,8 @@ function Map() {
 
         // Found end but waiting for animation to end
         if(state.current.finished && !animationEnded) {
-            // Render route differently for bidirectional
-            if(settings.algorithm === "bidirectional") {
+            // Render route differently for bidirectional algorithms
+            if(settings.algorithm === "bidirectional" || settings.algorithm === "bidirectional-astar") {
                 if(!traceNode.current) traceNode.current = updatedNodes[0];
                 const parentNode = traceNode.current.parent;
                 updateWaypoints(parentNode, traceNode.current, "route", Math.max(Math.log2(settings.speed), 1));

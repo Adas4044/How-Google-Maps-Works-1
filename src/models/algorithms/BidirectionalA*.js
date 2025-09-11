@@ -18,11 +18,9 @@ class BidirectionalAStar extends PathfindingAlgorithm {
         this.closedSetEnd = new Set();
         this.meetingNode = null;
         
-        // Initialize distances for start node
         startNode.distanceFromStart = 0;
         startNode.distanceToEnd = this.heuristic(startNode, endNode);
         
-        // Initialize distances for end node (reversed search)
         endNode.distanceFromStart = 0;
         endNode.distanceToEnd = this.heuristic(endNode, startNode);
     }
@@ -39,7 +37,6 @@ class BidirectionalAStar extends PathfindingAlgorithm {
 
         const updatedNodes = [];
 
-        // Expand from start side
         if (this.openSetStart.length > 0) {
             const currentStart = this.getLowestFScoreNode(this.openSetStart);
             this.openSetStart.splice(this.openSetStart.indexOf(currentStart), 1);
@@ -49,7 +46,6 @@ class BidirectionalAStar extends PathfindingAlgorithm {
             const refEdge = currentStart.edges.find(e => e.getOtherNode(currentStart) === currentStart.referer);
             if (refEdge) refEdge.visited = true;
 
-            // Check if we've met the other search
             if (this.closedSetEnd.has(currentStart) || this.openSetEnd.includes(currentStart)) {
                 this.meetingNode = currentStart;
                 this.finished = true;
@@ -60,7 +56,6 @@ class BidirectionalAStar extends PathfindingAlgorithm {
             updatedNodes.push(...this.updateNeighbors(currentStart, this.openSetStart, this.closedSetStart, true));
         }
 
-        // Expand from end side
         if (this.openSetEnd.length > 0 && !this.finished) {
             const currentEnd = this.getLowestFScoreNode(this.openSetEnd);
             this.openSetEnd.splice(this.openSetEnd.indexOf(currentEnd), 1);
@@ -70,7 +65,6 @@ class BidirectionalAStar extends PathfindingAlgorithm {
             const refEdge = currentEnd.edges.find(e => e.getOtherNode(currentEnd) === currentEnd.referer);
             if (refEdge) refEdge.visited = true;
 
-            // Check if we've met the other search
             if (this.closedSetStart.has(currentEnd) || this.openSetStart.includes(currentEnd)) {
                 this.meetingNode = currentEnd;
                 this.finished = true;
@@ -92,14 +86,11 @@ class BidirectionalAStar extends PathfindingAlgorithm {
             const neighbor = n.node;
             const edge = n.edge;
 
-            // Skip if already in closed set
             if (closedSet.has(neighbor)) continue;
 
-            // Calculate tentative g score (distance from start)
             const tentativeGScore = currentNode.distanceFromStart + 
                 Math.hypot(neighbor.longitude - currentNode.longitude, neighbor.latitude - currentNode.latitude);
 
-            // Fill edges that are not marked on the map
             if (neighbor.visited && !edge.visited) {
                 edge.visited = true;
                 neighbor.referer = currentNode;
@@ -108,20 +99,19 @@ class BidirectionalAStar extends PathfindingAlgorithm {
 
             let isInOpenSet = openSet.includes(neighbor);
 
-            // If not in open set, add it
             if (!isInOpenSet) {
                 openSet.push(neighbor);
                 isInOpenSet = true;
             }
-            // If already in open set with a better path, skip
             else if (neighbor.distanceFromStart <= tentativeGScore) {
                 continue;
             }
 
-            // This path is the best so far, record it
             neighbor.distanceFromStart = tentativeGScore;
             neighbor.distanceToEnd = this.heuristic(neighbor, targetNode);
             neighbor.referer = currentNode;
+            
+            neighbor.prevParent = neighbor.parent;
             neighbor.parent = currentNode;
 
             if (!updatedNodes.includes(neighbor)) {
