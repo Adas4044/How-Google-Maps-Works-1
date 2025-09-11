@@ -15,34 +15,13 @@ class BidirectionalAStarLookup extends PathfindingAlgorithm {
         this.lookupPathIndex = 0;
     }
 
-    start(startNode, endNode) {
+    start(startNode, endNode, userRadius = 4) {
         super.start(startNode, endNode);
         
         if (!this.lookupTable.computed) {
-            const graph = this.getGraphFromNode(startNode);
+            const graph = this.getSimpleGraphFromNode(startNode);
             if (graph) {
-                this.lookupTable.precompute(graph);
-            }
-        }
-        
-        const precomputedRoute = this.lookupTable.getRoute(startNode, endNode);
-        if (precomputedRoute) {
-            this.usingLookupPath = true;
-            this.lookupPath = precomputedRoute.path;
-            this.lookupPathIndex = 0;
-            return;
-        }
-        
-        const startHub = this.lookupTable.findNearestHub(startNode);
-        const endHub = this.lookupTable.findNearestHub(endNode);
-        
-        if (startHub && endHub && startHub !== endHub) {
-            const hubRoute = this.lookupTable.getRoute(startHub, endHub);
-            if (hubRoute) {
-                this.usingLookupPath = true;
-                this.lookupPath = [startNode, ...hubRoute.path, endNode];
-                this.lookupPathIndex = 0;
-                return;
+                this.lookupTable.precompute(graph, userRadius);
             }
         }
         
@@ -60,22 +39,23 @@ class BidirectionalAStarLookup extends PathfindingAlgorithm {
         endNode.distanceToEnd = this.heuristic(endNode, startNode);
     }
 
-    getGraphFromNode(node) {
-        const visited = new Set();
+    getSimpleGraphFromNode(node) {
         const nodes = new Map();
+        const visited = new Set();
         const queue = [node];
+        let count = 0;
         
-        let maxNodes = 10000;
-        while (queue.length > 0 && maxNodes > 0) {
+        while (queue.length > 0 && count < 50) {
             const current = queue.shift();
             if (visited.has(current.id)) continue;
             
             visited.add(current.id);
             nodes.set(current.id, current);
-            maxNodes--;
+            count++;
             
-            for (const neighbor of current.neighbors) {
-                if (!visited.has(neighbor.node.id) && maxNodes > 0) {
+            for (let i = 0; i < Math.min(current.neighbors.length, 3); i++) {
+                const neighbor = current.neighbors[i];
+                if (!visited.has(neighbor.node.id) && count < 50) {
                     queue.push(neighbor.node);
                 }
             }
@@ -185,7 +165,7 @@ class BidirectionalAStarLookup extends PathfindingAlgorithm {
             if (this.lookupTable.computed) {
                 const lookupRoute = this.lookupTable.getRoute(neighbor, targetNode);
                 if (lookupRoute) {
-                    edgeWeight = Math.min(edgeWeight, lookupRoute.distance * 0.8);
+                    edgeWeight = edgeWeight * 0.9;
                 }
             }
 

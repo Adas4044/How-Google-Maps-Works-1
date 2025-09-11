@@ -54,7 +54,7 @@ export default class PathfindingState {
     /**
      * Resets state and initializes new pathfinding animation
      */
-    start(algorithm) {
+    start(algorithm, userRadius = 4) {
         this.reset();
         switch(algorithm) {
             case "bfs":
@@ -86,7 +86,11 @@ export default class PathfindingState {
                 break;
         }
 
-        this.algorithm.start(this.startNode, this.endNode);
+        if (algorithm === "bidirectional-astar-lookup") {
+            this.algorithm.start(this.startNode, this.endNode, userRadius);
+        } else {
+            this.algorithm.start(this.startNode, this.endNode);
+        }
     }
 
     /**

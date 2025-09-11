@@ -120,7 +120,7 @@ function Map() {
         setFadeRadiusReverse(true);
         setTimeout(() => {
             clearPath();
-            state.current.start(settings.algorithm);
+            state.current.start(settings.algorithm, settings.radius);
             setStarted(true);
         }, 400);
     }
@@ -362,6 +362,7 @@ function Map() {
             <LookupTablePanel 
                 lookupTable={lookupTable}
                 visible={settings.algorithm === "bidirectional-astar-lookup"}
+                userRadius={settings.radius}
             />
 
             <Interface 

@@ -2,7 +2,7 @@ import { Paper, Typography, List, ListItem, ListItemText, Chip, Box, Collapse, I
 import { ExpandMore, ExpandLess, Hub, Route } from "@mui/icons-material";
 import { useState } from "react";
 
-const LookupTablePanel = ({ lookupTable, visible }) => {
+const LookupTablePanel = ({ lookupTable, visible, userRadius }) => {
     const [expanded, setExpanded] = useState(false);
     
     if (!visible || !lookupTable || !lookupTable.computed) {
@@ -39,6 +39,11 @@ const LookupTablePanel = ({ lookupTable, visible }) => {
                         <Typography variant="h6" style={{ color: '#46B780' }}>
                             Lookup Table
                         </Typography>
+                        {userRadius && (
+                            <Typography variant="caption" style={{ color: '#A8AFB3' }}>
+                                ({userRadius}km)
+                            </Typography>
+                        )}
                     </Box>
                     <IconButton onClick={handleToggleExpanded} size="small" style={{ color: '#fff' }}>
                         {expanded ? <ExpandLess /> : <ExpandMore />}
