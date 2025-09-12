@@ -20,56 +20,65 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                 title: "Welcome to Google Maps Explained!",
                 explanation: "Hi! I'm Geo, your guide to understanding how Google Maps works! Today we'll explore the algorithms that power navigation apps.",
                 nextInfo: "First, set two points on the map by clicking, then right clicking. We'll start with the most basic algorithm - BFS (Breadth-First Search).",
-                unlockAlgorithm: 'bfs'
+                unlockAlgorithm: 'bfs',
+                characterImage: 'first.png'
             },
             'bfs': {
                 title: "BFS (Breadth-First Search)",
                 explanation: "BFS explores nodes level by level, like ripples spreading in water. It guarantees the shortest path if all edges have the same cost, but it wastes time checking everything equally.",
                 nextInfo: "Imagine dropping a stone in a pond - the ripples expand outward evenly. Try it now!",
-                unlockAlgorithm: 'bfs'
+                unlockAlgorithm: 'bfs',
+                characterImage: 'first.png'
             },
             'dfs': {
                 title: "DFS (Depth-First Search)",
                 explanation: "Another approach is DFS. DFS dives deep down one path before backtracking. It uses less memory than BFS, but it can miss the shortest path and wander a lot.",
                 nextInfo: "It’s like your uncle driving in a new city, making random turns and only later realizing he’s lost. Not the best for navigation!",
-                unlockAlgorithm: 'dfs'
+                unlockAlgorithm: 'dfs',
+                characterImage: 'thinking.png'
             },
             'bidirectional': {
                 title: "Bidirectional BFS",
                 explanation: "So lets stick with BFS and see how we can optimize it! Instead of expanding one giant circle from start to goal, bidirectional BFS expands two smaller circles that meet in the middle. Since the area of two smaller circles is less than one big circle, the search space shrinks dramatically.",
                 nextInfo: "It’s like two people walking toward each other instead of one person making the whole trip. Faster and smarter!",
-                unlockAlgorithm: 'bidirectional'
+                unlockAlgorithm: 'bidirectional',
+                characterImage: 'tired.png'
             },
             'greedy': {
                 title: "Greedy Search",
                 explanation: "Bidirectional BFS works great! But its still not the most efficient because we end up exploring a lot of roads in the wrong direction. Greedy search always picks the node that seems closest to the goal based on a heuristic. It’s fast, but it doesn’t guarantee the shortest path and can get trapped.",
                 nextInfo: "Think of heading straight toward McDonald's because you see the sign. Quick—but what if there’s a river in the way?",
-                unlockAlgorithm: 'greedy'
+                unlockAlgorithm: 'greedy',
+                characterImage: 'reading_map.png'
             },
             'astar': {
                 title: "A* Search",
                 explanation: "A* fixes greedy’s flaw by balancing two things: distance traveled so far (g) and estimated stright-line distance left (h). The total cost is f(n) = g(n) + h(n). This makes it both optimal and efficient if the heuristic is good.",
                 nextInfo: "It’s like being smart about both how far you’ve gone and how much is left. That’s why A* is the go-to for pathfinding!",
-                unlockAlgorithm: 'astar'
+                unlockAlgorithm: 'astar',
+                characterImage: 'first.png'
             },
             'bidirectional-astar': {
                 title: "Bidirectional A*",
                 explanation: "By running A* from both the start and the goal, the search space shrinks even more. It’s just like what we did to optimize BFS!",
                 nextInfo: "Navigation systems love this trick because it’s fast *and* optimal.",
-                unlockAlgorithm: 'bidirectional-astar'
+                unlockAlgorithm: 'bidirectional-astar',
+                characterImage: 'smirk.png'
             },
             'bidirectional-astar-lookup': {
                 title: "A* + Lookup Table",
                 explanation: "Running a lot faster right? We're almost there! Real systems like Google Maps don’t calculate everything in real time. They precompute popular shortcuts that everyone uses (usually highways) in lookup tables to save compute power and only calculate the local streets dynamically. I made a lookup table here based on the points you would chose, but the real lookup tables are done for longer distances. Computing a lookup table for eevery short distance route out there would be an almost infinitely large table!",
                 nextInfo: "The long distance lookup tables are what make Maps feels instant—you’re not waiting for math, just a quick lookup and some local fine-tuning.",
-                unlockAlgorithm: 'bidirectional-astar-lookup'
+                unlockAlgorithm: 'bidirectional-astar-lookup',
+                characterImage: 'beach.png'
             },
             'final': {
                 title: "Congratulations!",
                 explanation: "You’ve mastered all the core pathfinding algorithms! From BFS to advanced A* with precomputation, you now know the building blocks of navigation systems.",
                 nextInfo: "Ready to see how it all comes together? Let’s explore the complete Google Maps system!",
                 unlockAlgorithm: null,
-                showGoogleMaps: true
+                showGoogleMaps: true,
+                characterImage: 'smirk.png'
             }
         };
 
@@ -127,7 +136,7 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                     }}
                 >
                     <img 
-                        src="./pics/first.png" 
+                        src="./pics/first.png"
                         alt="Geo"
                         style={{
                             width: '50px',
@@ -148,7 +157,7 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                         <GeoIntroduction
                             event={{
                                 character: 'geo',
-                                characterImage: 'first.png',
+                                characterImage: content.characterImage || 'first.png',
                                 dialogue: {
                                     title: content.title || 'Conversation',
                                     message: `${content.explanation || ''}\n\n${content.nextInfo || ''}`,
