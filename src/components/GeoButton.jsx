@@ -6,6 +6,15 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
     const [showExplanation, setShowExplanation] = useState(false);
 
     const getConversationContent = (conversationId) => {
+        if (!conversationId) {
+            return {
+                title: "Welcome to Google Maps Explained!",
+                explanation: "Hi! I'm Geo, your guide to understanding how Google Maps works!",
+                nextInfo: "Click on an algorithm to learn about it.",
+                unlockAlgorithm: null
+            };
+        }
+
         const conversations = {
             'welcome': {
                 title: "Welcome to Google Maps Explained!",
@@ -63,7 +72,12 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
             }
         };
 
-        return conversations[conversationId] || conversations['welcome'];
+        const conversation = conversations[conversationId];
+        if (!conversation) {
+            console.warn('Unknown conversation ID:', conversationId);
+            return conversations['welcome'];
+        }
+        return conversation;
     };
 
     const handleGeoClick = () => {
@@ -75,13 +89,17 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
         if (pendingConversation) {
             try {
                 const content = getConversationContent(pendingConversation);
-                if (content.unlockAlgorithm && onAlgorithmUnlock) {
+                if (content && content.unlockAlgorithm && onAlgorithmUnlock) {
                     onAlgorithmUnlock(content.unlockAlgorithm);
                 }
-                onConversationComplete(pendingConversation);
+                if (onConversationComplete) {
+                    onConversationComplete(pendingConversation);
+                }
             } catch (error) {
-                console.error('Error in conversation completion:', error);
-                onConversationComplete(pendingConversation);
+                console.error('Error in conversation completion:', error, 'Conversation ID:', pendingConversation);
+                if (onConversationComplete) {
+                    onConversationComplete(pendingConversation);
+                }
             }
         }
     };
@@ -117,25 +135,35 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                 </Fab>
             </Zoom>
 
-            {showExplanation && pendingConversation && (
-                <GeoIntroduction
-                    event={{
-                        character: 'geo',
-                        characterImage: 'first.png',
-                        dialogue: {
-                            title: getConversationContent(pendingConversation).title,
-                            message: `${getConversationContent(pendingConversation).explanation}\n\n${getConversationContent(pendingConversation).nextInfo}`,
-                            hasNext: false,
-                            isClosing: true
-                        },
-                        position: 'center',
-                        backdrop: true
-                    }}
-                    onNext={() => {}}
-                    onClose={handleClose}
-                    onSkip={handleClose}
-                />
-            )}
+            {showExplanation && pendingConversation && (() => {
+                try {
+                    const content = getConversationContent(pendingConversation);
+                    if (!content) return null;
+                    
+                    return (
+                        <GeoIntroduction
+                            event={{
+                                character: 'geo',
+                                characterImage: 'first.png',
+                                dialogue: {
+                                    title: content.title || 'Conversation',
+                                    message: `${content.explanation || ''}\n\n${content.nextInfo || ''}`,
+                                    hasNext: false,
+                                    isClosing: true
+                                },
+                                position: 'center',
+                                backdrop: true
+                            }}
+                            onNext={() => {}}
+                            onClose={handleClose}
+                            onSkip={handleClose}
+                        />
+                    );
+                } catch (error) {
+                    console.error('Error rendering conversation:', error, 'Conversation ID:', pendingConversation);
+                    return null;
+                }
+            })()}
         </>
     );
 };

@@ -50,29 +50,59 @@ export const useAlgorithmUnlock = () => {
 
         const nextAlgorithm = algorithmTransitions[algorithmId];
         if (nextAlgorithm) {
-            unlockAlgorithm(nextAlgorithm);
             setPendingConversation(nextAlgorithm);
         }
     }, [unlockedAlgorithms, completedConversations, saveProgress, unlockAlgorithm]);
 
     const completeConversation = useCallback((conversationId) => {
-        setCompletedConversations(prev => {
-            const newCompleted = new Set([...prev, conversationId]);
-            saveProgress(unlockedAlgorithms, completedAlgorithms, newCompleted);
-            return newCompleted;
-        });
-        setPendingConversation(null);
-        
-        if (conversationId === 'welcome') {
-            unlockAlgorithm('bfs');
+        try {
+            if (!conversationId) {
+                console.warn('completeConversation called with no conversationId');
+                return;
+            }
+
+            setCompletedConversations(prev => {
+                const newCompleted = new Set([...prev, conversationId]);
+                saveProgress(unlockedAlgorithms, completedAlgorithms, newCompleted);
+                return newCompleted;
+            });
+            setPendingConversation(null);
+            
+            const conversationUnlocks = {
+                'welcome': 'bfs',
+                'dfs': 'dfs',
+                'bidirectional': 'bidirectional',
+                'greedy': 'greedy',
+                'astar': 'astar',
+                'bidirectional-astar': 'bidirectional-astar',
+                'bidirectional-astar-lookup': 'bidirectional-astar-lookup',
+                'google-maps': 'google-maps'
+            };
+
+            const algorithmToUnlock = conversationUnlocks[conversationId];
+            if (algorithmToUnlock) {
+                unlockAlgorithm(algorithmToUnlock);
+            }
+        } catch (error) {
+            console.error('Error in completeConversation:', error, 'conversationId:', conversationId);
+            setPendingConversation(null);
         }
     }, [unlockedAlgorithms, completedAlgorithms, saveProgress, unlockAlgorithm]);
 
     const handleAlgorithmClick = useCallback((algorithmId) => {
-        const algorithmsWithConversations = ['bfs', 'dfs', 'bidirectional', 'greedy', 'astar', 'bidirectional-astar', 'bidirectional-astar-lookup', 'google-maps'];
-        
-        if (algorithmsWithConversations.includes(algorithmId) && unlockedAlgorithms.has(algorithmId)) {
-            setPendingConversation(algorithmId);
+        try {
+            if (!algorithmId) {
+                console.warn('handleAlgorithmClick called with no algorithmId');
+                return;
+            }
+
+            const algorithmsWithConversations = ['bfs', 'dfs', 'bidirectional', 'greedy', 'astar', 'bidirectional-astar', 'bidirectional-astar-lookup', 'google-maps'];
+            
+            if (algorithmsWithConversations.includes(algorithmId) && unlockedAlgorithms.has(algorithmId)) {
+                setPendingConversation(algorithmId);
+            }
+        } catch (error) {
+            console.error('Error in handleAlgorithmClick:', error, 'algorithmId:', algorithmId);
         }
     }, [unlockedAlgorithms]);
 
