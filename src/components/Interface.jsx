@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "re
 import { INITIAL_COLORS, LOCATIONS } from "../config";
 import { arrayToRgb, rgbToArray } from "../helpers";
 
-const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, time, maxTime, settings, colors, loading, timeChanged, cinematic, placeEnd, changeRadius, changeAlgorithm, setPlaceEnd, setCinematic, setSettings, setColors, startPathfinding, toggleAnimation, clearPath, changeLocation, showIntroScreen, resetTutorial, tutorial }, ref) => {
+const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, time, maxTime, settings, colors, loading, timeChanged, cinematic, placeEnd, changeRadius, changeAlgorithm, setPlaceEnd, setCinematic, setSettings, setColors, startPathfinding, toggleAnimation, clearPath, changeLocation, showIntroScreen, algorithmUnlock }, ref) => {
     const [sidebar, setSidebar] = useState(false);
     const [snack, setSnack] = useState({
         open: false,
@@ -21,6 +21,9 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
     const helperTime = useRef(4800);
     const rightDown = useRef(false);
     const leftDown = useRef(false);
+
+    // Use the algorithm unlock system to determine enabled algorithms
+    const enabledAlgorithms = algorithmUnlock?.unlockedAlgorithms || ['bfs'];
 
     // Expose showSnack to parent from ref
     useImperativeHandle(ref, () => ({
@@ -186,9 +189,18 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 <Tooltip title="BFS">
                     <Button
                         onClick={() => {changeAlgorithm("bfs");}}
-                        disabled={!animationEnded && started}
+                        disabled={(!animationEnded && started) || !enabledAlgorithms.includes('bfs')}
                         variant={settings.algorithm === "bfs" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "bfs" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 120, height: 44, borderRadius: 22 }}
+                        style={{ 
+                            backgroundColor: settings.algorithm === "bfs" ? "#46B780" : enabledAlgorithms.includes('bfs') ? "#404156" : "#2a2a2a", 
+                            color: enabledAlgorithms.includes('bfs') ? "#fff" : "#666", 
+                            textTransform: "none", 
+                            padding: "0 16px", 
+                            minWidth: 120, 
+                            height: 44, 
+                            borderRadius: 22,
+                            opacity: enabledAlgorithms.includes('bfs') ? 1 : 0.5
+                        }}
                     >
                         BFS
                     </Button>
@@ -197,9 +209,18 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 <Tooltip title="DFS">
                     <Button
                         onClick={() => {changeAlgorithm("dfs");}}
-                        disabled={!animationEnded && started}
+                        disabled={(!animationEnded && started) || !enabledAlgorithms.includes('dfs')}
                         variant={settings.algorithm === "dfs" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "dfs" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 120, height: 44, borderRadius: 22 }}
+                        style={{ 
+                            backgroundColor: settings.algorithm === "dfs" ? "#46B780" : enabledAlgorithms.includes('dfs') ? "#404156" : "#2a2a2a", 
+                            color: enabledAlgorithms.includes('dfs') ? "#fff" : "#666", 
+                            textTransform: "none", 
+                            padding: "0 16px", 
+                            minWidth: 120, 
+                            height: 44, 
+                            borderRadius: 22,
+                            opacity: enabledAlgorithms.includes('dfs') ? 1 : 0.5
+                        }}
                     >
                         DFS
                     </Button>
@@ -208,9 +229,18 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 <Tooltip title="Bidirectional BFS">
                     <Button
                         onClick={() => {changeAlgorithm("bidirectional");}}
-                        disabled={!animationEnded && started}
+                        disabled={(!animationEnded && started) || !enabledAlgorithms.includes('bidirectional')}
                         variant={settings.algorithm === "bidirectional" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "bidirectional" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 170, height: 44, borderRadius: 22 }}
+                        style={{ 
+                            backgroundColor: settings.algorithm === "bidirectional" ? "#46B780" : enabledAlgorithms.includes('bidirectional') ? "#404156" : "#2a2a2a", 
+                            color: enabledAlgorithms.includes('bidirectional') ? "#fff" : "#666", 
+                            textTransform: "none", 
+                            padding: "0 16px", 
+                            minWidth: 170, 
+                            height: 44, 
+                            borderRadius: 22,
+                            opacity: enabledAlgorithms.includes('bidirectional') ? 1 : 0.5
+                        }}
                     >
                         Bidirectional BFS
                     </Button>
@@ -219,9 +249,18 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 <Tooltip title="Greedy">
                     <Button
                         onClick={() => {changeAlgorithm("greedy");}}
-                        disabled={!animationEnded && started}
+                        disabled={(!animationEnded && started) || !enabledAlgorithms.includes('greedy')}
                         variant={settings.algorithm === "greedy" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "greedy" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
+                        style={{ 
+                            backgroundColor: settings.algorithm === "greedy" ? "#46B780" : enabledAlgorithms.includes('greedy') ? "#404156" : "#2a2a2a", 
+                            color: enabledAlgorithms.includes('greedy') ? "#fff" : "#666", 
+                            textTransform: "none", 
+                            padding: "0 16px", 
+                            minWidth: 140, 
+                            height: 44, 
+                            borderRadius: 22,
+                            opacity: enabledAlgorithms.includes('greedy') ? 1 : 0.5
+                        }}
                     >
                         Greedy
                     </Button>
@@ -230,9 +269,18 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 <Tooltip title="A*">
                     <Button
                         onClick={() => {changeAlgorithm("astar");}}
-                        disabled={!animationEnded && started}
+                        disabled={(!animationEnded && started) || !enabledAlgorithms.includes('astar')}
                         variant={settings.algorithm === "astar" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "astar" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 140, height: 44, borderRadius: 22 }}
+                        style={{ 
+                            backgroundColor: settings.algorithm === "astar" ? "#46B780" : enabledAlgorithms.includes('astar') ? "#404156" : "#2a2a2a", 
+                            color: enabledAlgorithms.includes('astar') ? "#fff" : "#666", 
+                            textTransform: "none", 
+                            padding: "0 16px", 
+                            minWidth: 140, 
+                            height: 44, 
+                            borderRadius: 22,
+                            opacity: enabledAlgorithms.includes('astar') ? 1 : 0.5
+                        }}
                     >
                         A*
                     </Button>
@@ -241,9 +289,18 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 <Tooltip title="Bidirectional A*">
                     <Button
                         onClick={() => {changeAlgorithm("bidirectional-astar");}}
-                        disabled={!animationEnded && started}
+                        disabled={(!animationEnded && started) || !enabledAlgorithms.includes('bidirectional-astar')}
                         variant={settings.algorithm === "bidirectional-astar" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "bidirectional-astar" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 170, height: 44, borderRadius: 22 }}
+                        style={{ 
+                            backgroundColor: settings.algorithm === "bidirectional-astar" ? "#46B780" : enabledAlgorithms.includes('bidirectional-astar') ? "#404156" : "#2a2a2a", 
+                            color: enabledAlgorithms.includes('bidirectional-astar') ? "#fff" : "#666", 
+                            textTransform: "none", 
+                            padding: "0 16px", 
+                            minWidth: 170, 
+                            height: 44, 
+                            borderRadius: 22,
+                            opacity: enabledAlgorithms.includes('bidirectional-astar') ? 1 : 0.5
+                        }}
                     >
                         Bidirectional A*
                     </Button>
@@ -252,9 +309,18 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 <Tooltip title="A* + Lookup Table">
                     <Button
                         onClick={() => {changeAlgorithm("bidirectional-astar-lookup");}}
-                        disabled={!animationEnded && started}
+                        disabled={(!animationEnded && started) || !enabledAlgorithms.includes('bidirectional-astar-lookup')}
                         variant={settings.algorithm === "bidirectional-astar-lookup" ? "contained" : "outlined"}
-                        style={{ backgroundColor: settings.algorithm === "bidirectional-astar-lookup" ? "#46B780" : "#404156", color: "#fff", textTransform: "none", padding: "0 16px", minWidth: 200, height: 44, borderRadius: 22 }}
+                        style={{ 
+                            backgroundColor: settings.algorithm === "bidirectional-astar-lookup" ? "#46B780" : enabledAlgorithms.includes('bidirectional-astar-lookup') ? "#404156" : "#2a2a2a", 
+                            color: enabledAlgorithms.includes('bidirectional-astar-lookup') ? "#fff" : "#666", 
+                            textTransform: "none", 
+                            padding: "0 16px", 
+                            minWidth: 200, 
+                            height: 44, 
+                            borderRadius: 22,
+                            opacity: enabledAlgorithms.includes('bidirectional-astar-lookup') ? 1 : 0.5
+                        }}
                     >
                         A* + Lookup Table
                     </Button>
@@ -342,13 +408,13 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             size="small"
                             disabled={!animationEnded && started}
                         >
-                            <MenuItem value={"bfs"}>BFS</MenuItem>
-                            <MenuItem value={"dfs"}>DFS</MenuItem>
-                            <MenuItem value={"bidirectional"}>Bidirectional BFS</MenuItem>
-                            <MenuItem value={"greedy"}>Greedy</MenuItem>
-                            <MenuItem value={"astar"}>A*</MenuItem>
-                            <MenuItem value={"bidirectional-astar"}>Bidirectional A*</MenuItem>
-                            <MenuItem value={"bidirectional-astar-lookup"}>A* + Lookup Table</MenuItem>
+                            <MenuItem value={"bfs"} disabled={!enabledAlgorithms.includes('bfs')}>BFS</MenuItem>
+                            <MenuItem value={"dfs"} disabled={!enabledAlgorithms.includes('dfs')}>DFS</MenuItem>
+                            <MenuItem value={"bidirectional"} disabled={!enabledAlgorithms.includes('bidirectional')}>Bidirectional BFS</MenuItem>
+                            <MenuItem value={"greedy"} disabled={!enabledAlgorithms.includes('greedy')}>Greedy</MenuItem>
+                            <MenuItem value={"astar"} disabled={!enabledAlgorithms.includes('astar')}>A*</MenuItem>
+                            <MenuItem value={"bidirectional-astar"} disabled={!enabledAlgorithms.includes('bidirectional-astar')}>Bidirectional A*</MenuItem>
+                            <MenuItem value={"bidirectional-astar-lookup"} disabled={!enabledAlgorithms.includes('bidirectional-astar-lookup')}>A* + Lookup Table</MenuItem>
                         </Select>
                     </FormControl>
 
@@ -524,13 +590,21 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             </Button>
                         )}
                         
-                        {resetTutorial && (
-                            <Button onClick={resetTutorial}
-                                variant="contained" style={{ backgroundColor: "#667eea", color: "#fff" }}
-                            >
-                                Reset Tutorial
-                            </Button>
-                        )}
+                        <Button onClick={() => {
+                            algorithmUnlock?.resetProgress();
+                        }}
+                            variant="contained" style={{ backgroundColor: "#667eea", color: "#fff" }}
+                        >
+                            Reset Progress
+                        </Button>
+                        
+                        <Button onClick={() => {
+                            algorithmUnlock?.unlockAllAlgorithms();
+                        }}
+                            variant="contained" style={{ backgroundColor: "#ff6b6b", color: "#fff" }}
+                        >
+                            Unlock All Algorithms
+                        </Button>
                     </div>
                 </div>
             </Drawer>

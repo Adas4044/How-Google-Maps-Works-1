@@ -8,29 +8,42 @@ export const useTutorial = () => {
     const [waitingFor, setWaitingFor] = useState(null);
 
     const startTutorial = useCallback(() => {
-        const firstEvent = getTutorialEvent('welcome');
-        setCurrentEvent(firstEvent);
         setIsActive(true);
         setWaitingFor(null);
+        // Trigger the app_start event to properly start the tutorial flow
+        setTimeout(() => {
+            const firstEvent = getEventByTrigger('app_start');
+            if (firstEvent) {
+                setCurrentEvent(firstEvent);
+            }
+        }, 100);
     }, []);
 
-    const triggerEvent = useCallback((triggerType, data = {}) => {
-        if (!isActive) return;
+        const triggerEvent = useCallback((triggerType, data = {}) => {
+        try {
+            if (!isActive) return;
 
-        if (waitingFor && waitingFor === triggerType) {
-            setWaitingFor(null);
-            const nextEvent = getEventByTrigger(triggerType);
-            if (nextEvent) {
-                setCurrentEvent(nextEvent);
+            if (waitingFor && waitingFor === triggerType) {
+                // Mark the previous event as completed when its waitFor condition is met
+                if (currentEvent) {
+                    setCompletedEvents(prev => new Set([...prev, currentEvent.id]));
+                }
+                setWaitingFor(null);
+                setCurrentEvent(null); // Clear current event first
+                return;
             }
-            return;
-        }
 
-        const event = getEventByTrigger(triggerType);
-        if (event && !completedEvents.has(event.id)) {
-            setCurrentEvent(event);
+            const event = getEventByTrigger(triggerType);
+            if (event && !completedEvents.has(event.id)) {
+                setCurrentEvent(event);
+            }
+        } catch (error) {
+            console.error('Tutorial system error:', error);
+            // Disable tutorial on error to prevent blocking core functionality
+            setIsActive(false);
+            setCurrentEvent(null);
         }
-    }, [isActive, waitingFor, completedEvents]);
+    }, [isActive, waitingFor, completedEvents, currentEvent]);
 
     const handleNext = useCallback(() => {
         if (!currentEvent) return;

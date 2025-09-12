@@ -10,10 +10,12 @@ import { getBoundingBoxFromPolygon, getMapGraph, getNearestNode } from "../servi
 import PathfindingState from "../models/PathfindingState";
 import Interface from "./Interface";
 import LookupTablePanel from "./LookupTablePanel";
+import GeoButton from "./GeoButton";
 import { INITIAL_COLORS, INITIAL_VIEW_STATE, MAP_STYLE } from "../config";
 import useSmoothStateChange from "../hooks/useSmoothStateChange";
+import { useAlgorithmUnlock } from "../hooks/useAlgorithmUnlock";
 
-function Map({ onShowIntro, onResetTutorial, tutorial }) {
+function Map({ onShowIntro }) {
     const [startNode, setStartNode] = useState(null);
     const [endNode, setEndNode] = useState(null);
     const [selectionRadius, setSelectionRadius] = useState([]);
@@ -27,7 +29,7 @@ function Map({ onShowIntro, onResetTutorial, tutorial }) {
     const [cinematic, setCinematic] = useState(false);
     const [placeEnd, setPlaceEnd] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [settings, setSettings] = useState({ algorithm: "astar", radius: 4, speed: 5 });
+    const [settings, setSettings] = useState({ algorithm: "bfs", radius: 4, speed: 5 });
     const [colors, setColors] = useState(INITIAL_COLORS);
     const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
     const [lookupTable, setLookupTable] = useState(null);
@@ -41,12 +43,18 @@ function Map({ onShowIntro, onResetTutorial, tutorial }) {
     const traceNode = useRef(null);
     const traceNode2 = useRef(null);
     const selectionRadiusOpacity = useSmoothStateChange(0, 0, 1, 400, fadeRadius.current, fadeRadiusReverse);
+    const algorithmUnlock = useAlgorithmUnlock();
 
     useEffect(() => {
         if (animationEnded && started) {
-            tutorial?.triggerEvent('algorithm_finished');
+            // Mark algorithm as completed when it finishes
+            algorithmUnlock.markAlgorithmCompleted(settings.algorithm);
         }
-    }, [animationEnded, started, tutorial]);
+    }, [animationEnded, started, settings.algorithm, algorithmUnlock]);
+
+
+
+
 
     async function mapClick(e, info, radius = null) {
         if(started && !animationEnded) return;
@@ -81,7 +89,6 @@ function Map({ onShowIntro, onResetTutorial, tutorial }) {
 
             const realEndNode = state.current.getNode(node.id);
             setEndNode(node);
-            tutorial?.triggerEvent('end_point_set');
             
             clearTimeout(loadingHandle);
             setLoading(false);
@@ -110,7 +117,6 @@ function Map({ onShowIntro, onResetTutorial, tutorial }) {
 
         setStartNode(node);
         setEndNode(null);
-        tutorial?.triggerEvent('start_point_set');
         const circle = createGeoJSONCircle([node.lon, node.lat], radius ?? settings.radius);
         setSelectionRadius([{ contour: circle}]);
         
@@ -130,7 +136,6 @@ function Map({ onShowIntro, onResetTutorial, tutorial }) {
             clearPath();
             state.current.start(settings.algorithm, settings.radius);
             setStarted(true);
-            tutorial?.triggerEvent('algorithm_started');
         }, 400);
     }
 
@@ -399,8 +404,13 @@ function Map({ onShowIntro, onResetTutorial, tutorial }) {
                 setPlaceEnd={setPlaceEnd}
                 changeRadius={changeRadius}
                 showIntroScreen={onShowIntro}
-                resetTutorial={onResetTutorial}
-                tutorial={tutorial}
+                algorithmUnlock={algorithmUnlock}
+            />
+
+            <GeoButton
+                currentAlgorithm={settings.algorithm}
+                algorithmState={started ? 'running' : animationEnded ? 'completed' : 'idle'}
+                onAlgorithmUnlock={algorithmUnlock.unlockAlgorithm}
             />
             <div className="attrib-container"><summary className="maplibregl-ctrl-attrib-button" title="Toggle attribution" aria-label="Toggle attribution"></summary><div className="maplibregl-ctrl-attrib-inner">© <a href="https://carto.com/about-carto/" target="_blank" rel="noopener">CARTO</a>, © <a href="http://www.openstreetmap.org/about/" target="_blank">OpenStreetMap</a> contributors</div></div>
         </>

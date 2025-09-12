@@ -99,23 +99,25 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                         height: '100vh',
                         backgroundColor: 'rgba(0, 0, 0, 0.6)',
                         zIndex: 9999,
-                        backdropFilter: 'blur(5px)'
+                        backdropFilter: 'blur(5px)',
+                        pointerEvents: 'none'
                     }}
                 />
             )}
             
-            <div style={getPositionStyles(position)}>
+            <div style={{...getPositionStyles(position), pointerEvents: 'auto'}}>
                 <Fade in={visible} timeout={400}>
                     <Box
                         style={{
                             display: 'flex',
                             alignItems: 'flex-end',
                             justifyContent: isCenter ? 'center' : 'flex-start',
-                            position: 'relative'
+                            position: 'relative',
+                            pointerEvents: 'auto'
                         }}
                     >
                         <img 
-                            src="./pics/first.png" 
+                            src={`./pics/${event.characterImage || 'first.png'}`}
                             alt="Geo character"
                             style={{
                                 height: isCenter ? '250px' : '150px',
@@ -128,14 +130,14 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                         
                         <Box
                             style={{
-                                background: 'linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.92) 100%)',
-                                borderRadius: '16px',
+                                background: 'linear-gradient(135deg, rgba(70, 183, 128, 0.95) 0%, rgba(46, 204, 113, 0.90) 100%)',
+                                borderRadius: '20px',
                                 padding: '20px 24px',
                                 maxWidth: isCenter ? '500px' : '350px',
                                 position: 'relative',
-                                boxShadow: '0 12px 40px rgba(0,0,0,0.3)',
+                                boxShadow: '0 16px 50px rgba(70, 183, 128, 0.4), 0 8px 25px rgba(0,0,0,0.2)',
                                 backdropFilter: 'blur(20px)',
-                                border: '2px solid rgba(255,255,255,0.5)',
+                                border: '2px solid rgba(255,255,255,0.3)',
                                 animation: 'slideInRight 0.6s ease-out both'
                             }}
                             onClick={(e) => e.stopPropagation()}
@@ -146,8 +148,10 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                                     position: 'absolute',
                                     top: '8px',
                                     right: '8px',
-                                    color: '#95a5a6',
-                                    padding: '4px'
+                                    color: 'rgba(255,255,255,0.7)',
+                                    padding: '4px',
+                                    backgroundColor: 'rgba(0,0,0,0.1)',
+                                    borderRadius: '50%'
                                 }}
                                 size="small"
                             >
@@ -162,7 +166,7 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                                     width: '0',
                                     height: '0',
                                     borderLeft: '10px solid transparent',
-                                    borderRight: '10px solid rgba(255,255,255,0.95)',
+                                    borderRight: '10px solid rgba(70, 183, 128, 0.95)',
                                     borderTop: '10px solid transparent',
                                     borderBottom: '10px solid transparent'
                                 }}
@@ -171,11 +175,12 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                             <Typography
                                 variant="h6"
                                 style={{
-                                    color: '#2c3e50',
+                                    color: '#fff',
                                     fontWeight: 'bold',
                                     marginBottom: '10px',
                                     fontSize: isCenter ? '1.3rem' : '1.1rem',
-                                    paddingRight: '30px'
+                                    paddingRight: '30px',
+                                    textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
                                 }}
                             >
                                 {dialogue.title}
@@ -184,10 +189,11 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                             <Typography
                                 variant="body1"
                                 style={{
-                                    color: '#34495e',
+                                    color: 'rgba(255,255,255,0.95)',
                                     lineHeight: '1.5',
                                     fontSize: isCenter ? '1.05rem' : '0.95rem',
-                                    marginBottom: dialogue.actionText ? '12px' : '16px'
+                                    marginBottom: dialogue.actionText ? '12px' : '16px',
+                                    textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
                                 }}
                             >
                                 {dialogue.message}
@@ -197,10 +203,11 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                                 <Typography
                                     variant="body2"
                                     style={{
-                                        color: '#7f8c8d',
+                                        color: 'rgba(255,255,255,0.8)',
                                         fontSize: '0.85rem',
                                         fontStyle: 'italic',
-                                        marginBottom: '16px'
+                                        marginBottom: '16px',
+                                        textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
                                     }}
                                 >
                                     {dialogue.actionText}
@@ -221,12 +228,25 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                                         size="small"
                                         endIcon={<ArrowForward />}
                                         style={{
-                                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                            background: 'rgba(255,255,255,0.2)',
                                             color: '#fff',
                                             textTransform: 'none',
-                                            borderRadius: '20px',
-                                            padding: '6px 16px',
-                                            fontSize: '0.85rem'
+                                            borderRadius: '25px',
+                                            padding: '8px 20px',
+                                            fontSize: '0.85rem',
+                                            fontWeight: '600',
+                                            backdropFilter: 'blur(10px)',
+                                            border: '1px solid rgba(255,255,255,0.3)',
+                                            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.target.style.background = 'rgba(255,255,255,0.3)';
+                                            e.target.style.transform = 'translateY(-1px)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.background = 'rgba(255,255,255,0.2)';
+                                            e.target.style.transform = 'translateY(0)';
                                         }}
                                     >
                                         Next
@@ -240,12 +260,24 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                                         size="small"
                                         endIcon={<Close />}
                                         style={{
-                                            background: 'linear-gradient(135deg, #46B780 0%, #2ECC71 100%)',
-                                            color: '#fff',
+                                            background: 'rgba(255,255,255,0.9)',
+                                            color: '#2ECC71',
                                             textTransform: 'none',
-                                            borderRadius: '20px',
-                                            padding: '6px 16px',
-                                            fontSize: '0.85rem'
+                                            borderRadius: '25px',
+                                            padding: '8px 20px',
+                                            fontSize: '0.85rem',
+                                            fontWeight: '700',
+                                            border: '1px solid rgba(255,255,255,0.5)',
+                                            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.target.style.background = '#fff';
+                                            e.target.style.transform = 'translateY(-1px)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.background = 'rgba(255,255,255,0.9)';
+                                            e.target.style.transform = 'translateY(0)';
                                         }}
                                     >
                                         Got it!

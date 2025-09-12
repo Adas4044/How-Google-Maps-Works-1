@@ -1,11 +1,25 @@
-import { Button, Fade, Typography, Box } from "@mui/material";
-import { useState, useRef } from "react";
-import { PlayArrow, Explore } from "@mui/icons-material";
+import { Button, Fade, Typography, Box, IconButton } from "@mui/material";
+import { useState, useRef, useEffect } from "react";
+import { PlayArrow, Explore, SkipNext } from "@mui/icons-material";
 
 const IntroScreen = ({ onStart }) => {
     const [phase, setPhase] = useState('intro'); // 'intro', 'transition', 'complete'
     const [showContent, setShowContent] = useState(true);
+    const [showSkipButton, setShowSkipButton] = useState(false);
+    const [isSkipping, setIsSkipping] = useState(false);
     const videoRef = useRef(null);
+
+    useEffect(() => {
+        const handleKeyPress = (e) => {
+            if (e.code === 'Space' && phase === 'transition' && !isSkipping) {
+                e.preventDefault();
+                handleSkipTransition();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [phase, isSkipping]);
 
     const handleStart = () => {
         setShowContent(false);
@@ -16,17 +30,36 @@ const IntroScreen = ({ onStart }) => {
             videoRef.current.loop = false;
             videoRef.current.play();
             
+            setTimeout(() => {
+                setShowSkipButton(true);
+            }, 1000);
+            
             videoRef.current.onended = () => {
-                setPhase('complete');
-                setTimeout(() => {
-                    onStart();
-                }, 500);
+                if (!isSkipping) {
+                    setPhase('complete');
+                    setTimeout(() => {
+                        onStart();
+                    }, 500);
+                }
             };
         } else {
             setTimeout(() => {
                 onStart();
             }, 2000);
         }
+    };
+
+    const handleSkipTransition = () => {
+        setIsSkipping(true);
+        setShowSkipButton(false);
+        
+        if (videoRef.current) {
+            videoRef.current.pause();
+        }
+        
+        setTimeout(() => {
+            onStart();
+        }, 300);
     };
 
     return (
@@ -156,6 +189,49 @@ const IntroScreen = ({ onStart }) => {
                     </Button>
                 </Box>
             </Fade>
+
+            {phase === 'transition' && (
+                <Fade in={showSkipButton && !isSkipping} timeout={500}>
+                    <Box
+                        style={{
+                            position: 'fixed',
+                            bottom: '20px',
+                            right: '20px',
+                            zIndex: 3
+                        }}
+                    >
+                        <IconButton
+                            onClick={handleSkipTransition}
+                            style={{
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                color: '#fff',
+                                backdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                padding: '12px'
+                            }}
+                            size="large"
+                        >
+                            <SkipNext />
+                        </IconButton>
+                        
+                        <Typography
+                            variant="caption"
+                            style={{
+                                position: 'absolute',
+                                bottom: '-25px',
+                                right: '0',
+                                color: 'rgba(255, 255, 255, 0.8)',
+                                fontSize: '0.75rem',
+                                textAlign: 'center',
+                                width: '100%',
+                                textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
+                            }}
+                        >
+                            Press SPACE
+                        </Typography>
+                    </Box>
+                </Fade>
+            )}
 
             <style>
                 {`
