@@ -13,7 +13,7 @@ import LookupTablePanel from "./LookupTablePanel";
 import { INITIAL_COLORS, INITIAL_VIEW_STATE, MAP_STYLE } from "../config";
 import useSmoothStateChange from "../hooks/useSmoothStateChange";
 
-function Map({ onShowIntro }) {
+function Map({ onShowIntro, onResetTutorial, tutorial }) {
     const [startNode, setStartNode] = useState(null);
     const [endNode, setEndNode] = useState(null);
     const [selectionRadius, setSelectionRadius] = useState([]);
@@ -41,6 +41,12 @@ function Map({ onShowIntro }) {
     const traceNode = useRef(null);
     const traceNode2 = useRef(null);
     const selectionRadiusOpacity = useSmoothStateChange(0, 0, 1, 400, fadeRadius.current, fadeRadiusReverse);
+
+    useEffect(() => {
+        if (animationEnded && started) {
+            tutorial?.triggerEvent('algorithm_finished');
+        }
+    }, [animationEnded, started, tutorial]);
 
     async function mapClick(e, info, radius = null) {
         if(started && !animationEnded) return;
@@ -75,6 +81,7 @@ function Map({ onShowIntro }) {
 
             const realEndNode = state.current.getNode(node.id);
             setEndNode(node);
+            tutorial?.triggerEvent('end_point_set');
             
             clearTimeout(loadingHandle);
             setLoading(false);
@@ -103,6 +110,7 @@ function Map({ onShowIntro }) {
 
         setStartNode(node);
         setEndNode(null);
+        tutorial?.triggerEvent('start_point_set');
         const circle = createGeoJSONCircle([node.lon, node.lat], radius ?? settings.radius);
         setSelectionRadius([{ contour: circle}]);
         
@@ -122,6 +130,7 @@ function Map({ onShowIntro }) {
             clearPath();
             state.current.start(settings.algorithm, settings.radius);
             setStarted(true);
+            tutorial?.triggerEvent('algorithm_started');
         }, 400);
     }
 
@@ -390,6 +399,8 @@ function Map({ onShowIntro }) {
                 setPlaceEnd={setPlaceEnd}
                 changeRadius={changeRadius}
                 showIntroScreen={onShowIntro}
+                resetTutorial={onResetTutorial}
+                tutorial={tutorial}
             />
             <div className="attrib-container"><summary className="maplibregl-ctrl-attrib-button" title="Toggle attribution" aria-label="Toggle attribution"></summary><div className="maplibregl-ctrl-attrib-inner">© <a href="https://carto.com/about-carto/" target="_blank" rel="noopener">CARTO</a>, © <a href="http://www.openstreetmap.org/about/" target="_blank">OpenStreetMap</a> contributors</div></div>
         </>

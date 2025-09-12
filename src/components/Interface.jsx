@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "re
 import { INITIAL_COLORS, LOCATIONS } from "../config";
 import { arrayToRgb, rgbToArray } from "../helpers";
 
-const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, time, maxTime, settings, colors, loading, timeChanged, cinematic, placeEnd, changeRadius, changeAlgorithm, setPlaceEnd, setCinematic, setSettings, setColors, startPathfinding, toggleAnimation, clearPath, changeLocation, showIntroScreen }, ref) => {
+const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, time, maxTime, settings, colors, loading, timeChanged, cinematic, placeEnd, changeRadius, changeAlgorithm, setPlaceEnd, setCinematic, setSettings, setColors, startPathfinding, toggleAnimation, clearPath, changeLocation, showIntroScreen, resetTutorial, tutorial }, ref) => {
     const [sidebar, setSidebar] = useState(false);
     const [snack, setSnack] = useState({
         open: false,
@@ -521,6 +521,14 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                                 variant="contained" style={{ backgroundColor: "#46B780", color: "#fff" }}
                             >
                                 Show intro
+                            </Button>
+                        )}
+                        
+                        {resetTutorial && (
+                            <Button onClick={resetTutorial}
+                                variant="contained" style={{ backgroundColor: "#667eea", color: "#fff" }}
+                            >
+                                Reset Tutorial
                             </Button>
                         )}
                     </div>
