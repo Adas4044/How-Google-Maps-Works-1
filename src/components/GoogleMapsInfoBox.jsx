@@ -41,7 +41,7 @@ const GoogleMapsInfoBox = ({ open, onClose }) => {
                 </IconButton>
 
                 <Typography variant="h4" style={{ fontWeight: 'bold', marginBottom: '24px', color: '#fff' }}>
-                    🗺️ Google Maps
+                    Google Maps
                 </Typography>
 
                 <Typography variant="h6" style={{ marginBottom: '16px', color: '#fff' }}>
@@ -63,10 +63,13 @@ const GoogleMapsInfoBox = ({ open, onClose }) => {
                         <strong>Precomputed Highways:</strong> Lookup tables for major routes to answer queries instantly
                     </Typography>
                     <Typography component="li" style={{ marginBottom: '12px', color: '#fff' }}>
-                        <strong>Real-time Traffic Data:</strong> Dynamic edge weights based on current conditions
+                        <strong>(Not Implemented): Real-time Traffic Data:</strong> Dynamic edge weights based on current conditions
                     </Typography>
                     <Typography component="li" style={{ marginBottom: '12px', color: '#fff' }}>
-                        <strong>Machine Learning:</strong> Predicting traffic patterns and optimizing routes
+                        <strong>(Not Implemented): Machine Learning:</strong> Predicting traffic patterns and optimizing routes
+                    </Typography>
+                    <Typography component="li" style={{ marginBottom: '12px', color: '#fff' }}>
+                        <strong>(Not Implemented): Weather Optimization:</strong> Predicting delays due to weather and other miscellaneous conditions.
                     </Typography>
                 </Box>
 

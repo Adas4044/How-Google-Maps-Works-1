@@ -19,55 +19,55 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
             'welcome': {
                 title: "Welcome to Google Maps Explained!",
                 explanation: "Hi! I'm Geo, your guide to understanding how Google Maps works! Today we'll explore the algorithms that power navigation apps.",
-                nextInfo: "First, set two points on the map by clicking, the right clicking. Then we'll start with the most basic algorithm - BFS (Breadth-First Search).",
+                nextInfo: "First, set two points on the map by clicking, then right clicking. We'll start with the most basic algorithm - BFS (Breadth-First Search).",
                 unlockAlgorithm: 'bfs'
             },
             'bfs': {
                 title: "BFS (Breadth-First Search)",
-                explanation: "Let's start with the most basic approach: Breadth-First Search. Imagine dropping a stone in a pond - the ripples expand outward evenly in all directions.",
-                nextInfo: "BFS explores every possible path layer by layer. It guarantees the shortest path if all roads have the same cost. Try it now!",
+                explanation: "BFS explores nodes level by level, like ripples spreading in water. It guarantees the shortest path if all edges have the same cost, but it wastes time checking everything equally.",
+                nextInfo: "Imagine dropping a stone in a pond - the ripples expand outward evenly. Try it now!",
                 unlockAlgorithm: 'bfs'
             },
             'dfs': {
                 title: "DFS (Depth-First Search)",
-                explanation: "Now let's try a completely different approach. What if we just dove deep down one path until we hit a dead end, then backtrack?",
-                nextInfo: "DFS is like your uncle driving through a foreign country, taking random turns hoping to find the destination. It can work, but it might take forever!",
+                explanation: "Another approach is DFS. DFS dives deep down one path before backtracking. It uses less memory than BFS, but it can miss the shortest path and wander a lot.",
+                nextInfo: "It’s like your uncle driving in a new city, making random turns and only later realizing he’s lost. Not the best for navigation!",
                 unlockAlgorithm: 'dfs'
             },
             'bidirectional': {
                 title: "Bidirectional BFS",
-                explanation: "Let's go back to BFS and improve it. What if we start searching from both the start AND the goal? They meet in the middle!",
-                nextInfo: "This is like two people walking toward each other instead of one person making the whole trip. Much faster!",
+                explanation: "So lets stick with BFS and see how we can optimize it! Instead of expanding one giant circle from start to goal, bidirectional BFS expands two smaller circles that meet in the middle. Since the area of two smaller circles is less than one big circle, the search space shrinks dramatically.",
+                nextInfo: "It’s like two people walking toward each other instead of one person making the whole trip. Faster and smarter!",
                 unlockAlgorithm: 'bidirectional'
             },
             'greedy': {
                 title: "Greedy Search",
-                explanation: "What if we added some direction? Imagine you're at home and want to go to McDonald's - you already know which way it is, so just head there!",
-                nextInfo: "Greedy Search always chooses the path that looks closest to the goal. It's fast and intuitive, but can it handle tricky situations?",
+                explanation: "Bidirectional BFS works great! But its still not the most efficient because we end up exploring a lot of roads in the wrong direction. Greedy search always picks the node that seems closest to the goal based on a heuristic. It’s fast, but it doesn’t guarantee the shortest path and can get trapped.",
+                nextInfo: "Think of heading straight toward McDonald's because you see the sign. Quick—but what if there’s a river in the way?",
                 unlockAlgorithm: 'greedy'
             },
             'astar': {
                 title: "A* Search",
-                explanation: "Greedy Search has a problem - it can get stuck in loops and find only a locally optimal path, not a most optimal path. That's why most systems use A* - think of it as Greedy Search with a brain!",
-                nextInfo: "A* balances two things: how far you've traveled (g) and how far you still need to go (h). Formula: f(n) = g(n) + h(n). Try it!",
+                explanation: "A* fixes greedy’s flaw by balancing two things: distance traveled so far (g) and estimated stright-line distance left (h). The total cost is f(n) = g(n) + h(n). This makes it both optimal and efficient if the heuristic is good.",
+                nextInfo: "It’s like being smart about both how far you’ve gone and how much is left. That’s why A* is the go-to for pathfinding!",
                 unlockAlgorithm: 'astar'
             },
             'bidirectional-astar': {
-                title: "Bidirectional A* ⚡",
-                explanation: "We made BFS faster with bidirectional search. Can we do the same for A*? Absolutely! Run A* from both ends simultaneously.",
-                nextInfo: "This combines A*'s intelligence with bidirectional speed. It's getting close to what real navigation systems use!",
+                title: "Bidirectional A*",
+                explanation: "By running A* from both the start and the goal, the search space shrinks even more. It’s just like what we did to optimize BFS!",
+                nextInfo: "Navigation systems love this trick because it’s fast *and* optimal.",
                 unlockAlgorithm: 'bidirectional-astar'
             },
             'bidirectional-astar-lookup': {
                 title: "A* + Lookup Table",
-                explanation: "How does Google Maps answer so fast? The secret is precomputation! Instead of calculating everything on the fly, it stores shortcuts for major routes.",
-                nextInfo: "Highways connect distant places quickly, so precompute those paths and only calculate local roads in real-time. This is how Google Maps really works!",
+                explanation: "Running a lot faster right? We're almost there! Real systems like Google Maps don’t calculate everything in real time. They precompute popular shortcuts that everyone uses (usually highways) in lookup tables to save compute power and only calculate the local streets dynamically. I made a lookup table here based on the points you would chose, but the real lookup tables are done for longer distances. Computing a lookup table for eevery short distance route out there would be an almost infinitely large table!",
+                nextInfo: "The long distance lookup tables are what make Maps feels instant—you’re not waiting for math, just a quick lookup and some local fine-tuning.",
                 unlockAlgorithm: 'bidirectional-astar-lookup'
             },
             'final': {
                 title: "Congratulations!",
-                explanation: "You've mastered all the core pathfinding algorithms! From basic BFS to advanced A* with lookup tables, you now understand the building blocks of navigation systems.",
-                nextInfo: "Ready to see how it all comes together? Let's explore the complete Google Maps system!",
+                explanation: "You’ve mastered all the core pathfinding algorithms! From BFS to advanced A* with precomputation, you now know the building blocks of navigation systems.",
+                nextInfo: "Ready to see how it all comes together? Let’s explore the complete Google Maps system!",
                 unlockAlgorithm: null,
                 showGoogleMaps: true
             }
