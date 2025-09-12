@@ -8,34 +8,9 @@ export const useAlgorithmUnlock = () => {
     const [completedConversations, setCompletedConversations] = useState(new Set());
     const [pendingConversation, setPendingConversation] = useState('welcome'); // Start with welcome
 
-    // Load saved progress from localStorage
-    useEffect(() => {
-        try {
-            const saved = localStorage.getItem('pathfinding_unlocked_algorithms');
-            if (saved) {
-                setUnlockedAlgorithms(new Set(JSON.parse(saved)));
-            }
-            
-            const completed = localStorage.getItem('pathfinding_completed_algorithms');
-            if (completed) {
-                setCompletedAlgorithms(new Set(JSON.parse(completed)));
-            }
 
-            const conversations = localStorage.getItem('pathfinding_completed_conversations');
-            if (conversations) {
-                setCompletedConversations(new Set(JSON.parse(conversations)));
-                // If welcome conversation is completed, no pending conversation
-                const conversationsSet = new Set(JSON.parse(conversations));
-                if (conversationsSet.has('welcome')) {
-                    setPendingConversation(null);
-                }
-            }
-        } catch (error) {
-            console.warn('Failed to load algorithm progress:', error);
-        }
-    }, []);
 
-    // Save progress to localStorage
+
     const saveProgress = useCallback((unlocked, completed, conversations) => {
         try {
             localStorage.setItem('pathfinding_unlocked_algorithms', JSON.stringify([...unlocked]));
@@ -95,10 +70,10 @@ export const useAlgorithmUnlock = () => {
     const handleAlgorithmClick = useCallback((algorithmId) => {
         const algorithmsWithConversations = ['bfs', 'dfs', 'bidirectional', 'greedy', 'astar', 'bidirectional-astar', 'bidirectional-astar-lookup'];
         
-        if (algorithmsWithConversations.includes(algorithmId)) {
+        if (algorithmsWithConversations.includes(algorithmId) && unlockedAlgorithms.has(algorithmId)) {
             setPendingConversation(algorithmId);
         }
-    }, []);
+    }, [unlockedAlgorithms]);
 
     const resetProgress = useCallback(() => {
         setUnlockedAlgorithms(new Set());
