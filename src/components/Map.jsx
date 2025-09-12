@@ -12,6 +12,7 @@ import Interface from "./Interface";
 import LookupTablePanel from "./LookupTablePanel";
 import GeoButton from "./GeoButton";
 import InstructionBox from "./InstructionBox";
+import GoogleMapsInfoBox from "./GoogleMapsInfoBox";
 import { INITIAL_COLORS, INITIAL_VIEW_STATE, MAP_STYLE } from "../config";
 import useSmoothStateChange from "../hooks/useSmoothStateChange";
 import { useAlgorithmUnlock } from "../hooks/useAlgorithmUnlock";
@@ -35,6 +36,7 @@ function Map({ onShowIntro }) {
     const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
     const [lookupTable, setLookupTable] = useState(null);
     const [showInstructions, setShowInstructions] = useState(false);
+    const [showGoogleMapsInfo, setShowGoogleMapsInfo] = useState(false);
     const ui = useRef();
     const fadeRadius = useRef();
     const requestRef = useRef();
@@ -56,6 +58,7 @@ function Map({ onShowIntro }) {
     useEffect(() => {
         if (animationEnded && started) {
             algorithmUnlock.markAlgorithmCompleted(settings.algorithm);
+            setStarted(false);
         }
     }, [animationEnded, started, settings.algorithm, algorithmUnlock]);
 
@@ -432,9 +435,16 @@ function Map({ onShowIntro }) {
                     }
                 }}
                 onAlgorithmUnlock={algorithmUnlock.unlockAlgorithm}
+                onShowGoogleMaps={() => setShowGoogleMapsInfo(true)}
             />
 
             <InstructionBox show={showInstructions} />
+
+            <GoogleMapsInfoBox 
+                open={showGoogleMapsInfo}
+                onClose={() => setShowGoogleMapsInfo(false)}
+            />
+
             <div className="attrib-container"><summary className="maplibregl-ctrl-attrib-button" title="Toggle attribution" aria-label="Toggle attribution"></summary><div className="maplibregl-ctrl-attrib-inner">© <a href="https://carto.com/about-carto/" target="_blank" rel="noopener">CARTO</a>, © <a href="http://www.openstreetmap.org/about/" target="_blank">OpenStreetMap</a> contributors</div></div>
         </>
     );

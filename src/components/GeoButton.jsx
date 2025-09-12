@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Fab, Zoom } from '@mui/material';
 import GeoIntroduction from './GeoIntroduction';
 
-const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnlock }) => {
+const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnlock, onShowGoogleMaps }) => {
     const [showExplanation, setShowExplanation] = useState(false);
 
     const getConversationContent = (conversationId) => {
@@ -64,11 +64,12 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                 nextInfo: "Highways connect distant places quickly, so precompute those paths and only calculate local roads in real-time. This is how Google Maps really works!",
                 unlockAlgorithm: 'bidirectional-astar-lookup'
             },
-            'google-maps': {
-                title: "Google Maps",
-                explanation: "Congratulations! You've learned all the core algorithms that power Google Maps. From simple BFS to advanced A* with lookup tables, you now understand the journey from basic pathfinding to real-world navigation systems.",
-                nextInfo: "Google Maps combines all these techniques: A* for intelligence, bidirectional search for speed, precomputed highways for efficiency, and real-time traffic data for accuracy. You've mastered the fundamentals of how billions of people navigate the world every day!",
-                unlockAlgorithm: null
+            'final': {
+                title: "Congratulations!",
+                explanation: "You've mastered all the core pathfinding algorithms! From basic BFS to advanced A* with lookup tables, you now understand the building blocks of navigation systems.",
+                nextInfo: "Ready to see how it all comes together? Let's explore the complete Google Maps system!",
+                unlockAlgorithm: null,
+                showGoogleMaps: true
             }
         };
 
@@ -91,6 +92,9 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                 const content = getConversationContent(pendingConversation);
                 if (content && content.unlockAlgorithm && onAlgorithmUnlock) {
                     onAlgorithmUnlock(content.unlockAlgorithm);
+                }
+                if (content && content.showGoogleMaps && onShowGoogleMaps) {
+                    onShowGoogleMaps();
                 }
                 if (onConversationComplete) {
                     onConversationComplete(pendingConversation);

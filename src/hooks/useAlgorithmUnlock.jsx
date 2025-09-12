@@ -44,20 +44,21 @@ export const useAlgorithmUnlock = () => {
             'bidirectional': 'greedy',
             'greedy': 'astar',
             'astar': 'bidirectional-astar',
-            'bidirectional-astar': 'bidirectional-astar-lookup',
-            'bidirectional-astar-lookup': 'google-maps'
+            'bidirectional-astar': 'bidirectional-astar-lookup'
         };
 
         const nextAlgorithm = algorithmTransitions[algorithmId];
         if (nextAlgorithm) {
             setPendingConversation(nextAlgorithm);
+        } else if (algorithmId === 'bidirectional-astar-lookup') {
+            setPendingConversation('final');
+            unlockAlgorithm('google-maps');
         }
     }, [unlockedAlgorithms, completedConversations, saveProgress, unlockAlgorithm]);
 
     const completeConversation = useCallback((conversationId) => {
         try {
             if (!conversationId) {
-                console.warn('completeConversation called with no conversationId');
                 return;
             }
 
