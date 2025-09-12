@@ -44,7 +44,8 @@ export const useAlgorithmUnlock = () => {
             'bidirectional': 'greedy',
             'greedy': 'astar',
             'astar': 'bidirectional-astar',
-            'bidirectional-astar': 'bidirectional-astar-lookup'
+            'bidirectional-astar': 'bidirectional-astar-lookup',
+            'bidirectional-astar-lookup': 'google-maps'
         };
 
         const nextAlgorithm = algorithmTransitions[algorithmId];
@@ -68,7 +69,7 @@ export const useAlgorithmUnlock = () => {
     }, [unlockedAlgorithms, completedAlgorithms, saveProgress, unlockAlgorithm]);
 
     const handleAlgorithmClick = useCallback((algorithmId) => {
-        const algorithmsWithConversations = ['bfs', 'dfs', 'bidirectional', 'greedy', 'astar', 'bidirectional-astar', 'bidirectional-astar-lookup'];
+        const algorithmsWithConversations = ['bfs', 'dfs', 'bidirectional', 'greedy', 'astar', 'bidirectional-astar', 'bidirectional-astar-lookup', 'google-maps'];
         
         if (algorithmsWithConversations.includes(algorithmId) && unlockedAlgorithms.has(algorithmId)) {
             setPendingConversation(algorithmId);

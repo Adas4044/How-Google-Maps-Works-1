@@ -54,6 +54,12 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                 explanation: "How does Google Maps answer so fast? The secret is precomputation! Instead of calculating everything on the fly, it stores shortcuts for major routes.",
                 nextInfo: "Highways connect distant places quickly, so precompute those paths and only calculate local roads in real-time. This is how Google Maps really works!",
                 unlockAlgorithm: 'bidirectional-astar-lookup'
+            },
+            'google-maps': {
+                title: "Google Maps 🗺️",
+                explanation: "Congratulations! You've learned all the core algorithms that power Google Maps. From simple BFS to advanced A* with lookup tables, you now understand the journey from basic pathfinding to real-world navigation systems.",
+                nextInfo: "Google Maps combines all these techniques: A* for intelligence, bidirectional search for speed, precomputed highways for efficiency, and real-time traffic data for accuracy. You've mastered the fundamentals of how billions of people navigate the world every day!",
+                unlockAlgorithm: null
             }
         };
 
@@ -67,11 +73,16 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
     const handleClose = () => {
         setShowExplanation(false);
         if (pendingConversation) {
-            const content = getConversationContent(pendingConversation);
-            if (content.unlockAlgorithm && onAlgorithmUnlock) {
-                onAlgorithmUnlock(content.unlockAlgorithm);
+            try {
+                const content = getConversationContent(pendingConversation);
+                if (content.unlockAlgorithm && onAlgorithmUnlock) {
+                    onAlgorithmUnlock(content.unlockAlgorithm);
+                }
+                onConversationComplete(pendingConversation);
+            } catch (error) {
+                console.error('Error in conversation completion:', error);
+                onConversationComplete(pendingConversation);
             }
-            onConversationComplete(pendingConversation);
         }
     };
 

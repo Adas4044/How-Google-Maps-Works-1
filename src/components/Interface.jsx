@@ -27,8 +27,12 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
     const handleAlgorithmSelect = (algorithmId) => {
         if (enabledAlgorithms.includes(algorithmId)) {
-            changeAlgorithm(algorithmId);
-            algorithmUnlock?.handleAlgorithmClick(algorithmId);
+            if (algorithmId === 'google-maps') {
+                algorithmUnlock?.handleAlgorithmClick(algorithmId);
+            } else {
+                changeAlgorithm(algorithmId);
+                algorithmUnlock?.handleAlgorithmClick(algorithmId);
+            }
         }
     };
 
@@ -332,6 +336,27 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                         A* + Lookup Table
                     </Button>
                 </Tooltip>
+
+                <Tooltip title="Google Maps">
+                    <Button
+                        onClick={() => handleAlgorithmSelect("google-maps")}
+                        disabled={!enabledAlgorithms.includes('google-maps')}
+                        variant="outlined"
+                        style={{ 
+                            backgroundColor: enabledAlgorithms.includes('google-maps') ? "#4285F4" : "#2a2a2a", 
+                            color: enabledAlgorithms.includes('google-maps') ? "#fff" : "#666", 
+                            textTransform: "none", 
+                            padding: "0 16px", 
+                            minWidth: 150, 
+                            height: 44, 
+                            borderRadius: 22,
+                            opacity: enabledAlgorithms.includes('google-maps') ? 1 : 0.5,
+                            border: enabledAlgorithms.includes('google-maps') ? "2px solid #4285F4" : "1px solid #666"
+                        }}
+                    >
+                        Google Maps
+                    </Button>
+                </Tooltip>
             </div>
 
             <Backdrop
@@ -422,6 +447,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             <MenuItem value={"astar"} disabled={!enabledAlgorithms.includes('astar')}>A*</MenuItem>
                             <MenuItem value={"bidirectional-astar"} disabled={!enabledAlgorithms.includes('bidirectional-astar')}>Bidirectional A*</MenuItem>
                             <MenuItem value={"bidirectional-astar-lookup"} disabled={!enabledAlgorithms.includes('bidirectional-astar-lookup')}>A* + Lookup Table</MenuItem>
+                            <MenuItem value={"google-maps"} disabled={!enabledAlgorithms.includes('google-maps')}>Google Maps</MenuItem>
                         </Select>
                     </FormControl>
 
