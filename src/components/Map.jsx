@@ -47,8 +47,6 @@ function Map({ onShowIntro }) {
 
     useEffect(() => {
         if (animationEnded && started) {
-            console.log('🏁 Algorithm animation ended:', settings.algorithm);
-            // Mark algorithm as completed when it finishes
             algorithmUnlock.markAlgorithmCompleted(settings.algorithm);
         }
     }, [animationEnded, started, settings.algorithm, algorithmUnlock]);
@@ -152,9 +150,7 @@ function Map({ onShowIntro }) {
             setPlaybackOn(!playbackOn);
             return;
         }
-        // Mark algorithm as completed if it was running and we're pausing it
         if (started && !animationEnded) {
-            console.log('⏸️ Algorithm paused/stopped via toggleAnimation:', settings.algorithm);
             algorithmUnlock.markAlgorithmCompleted(settings.algorithm);
         }
         
@@ -165,9 +161,7 @@ function Map({ onShowIntro }) {
     }
 
     function clearPath() {
-        // Mark algorithm as completed if it was running (for unlocking next algorithm)
         if (started && !animationEnded) {
-            console.log('⏹️ Algorithm manually stopped:', settings.algorithm);
             algorithmUnlock.markAlgorithmCompleted(settings.algorithm);
         }
         

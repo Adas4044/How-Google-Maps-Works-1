@@ -61,31 +61,17 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
     };
 
     const handleGeoClick = () => {
-        console.log('🎭 Geo button clicked, pendingConversation:', pendingConversation);
-        try {
-            if (pendingConversation) {
-                const content = getConversationContent(pendingConversation);
-                console.log('📝 Conversation content:', content);
-            }
-            setShowExplanation(true);
-        } catch (error) {
-            console.error('Error in handleGeoClick:', error);
-        }
+        setShowExplanation(true);
     };
 
     const handleClose = () => {
         setShowExplanation(false);
         if (pendingConversation) {
-            try {
-                const content = getConversationContent(pendingConversation);
-                if (content.unlockAlgorithm && onAlgorithmUnlock) {
-                    onAlgorithmUnlock(content.unlockAlgorithm);
-                }
-                onConversationComplete(pendingConversation);
-            } catch (error) {
-                console.error('Error handling conversation completion:', error);
-                console.log('Pending conversation:', pendingConversation);
+            const content = getConversationContent(pendingConversation);
+            if (content.unlockAlgorithm && onAlgorithmUnlock) {
+                onAlgorithmUnlock(content.unlockAlgorithm);
             }
+            onConversationComplete(pendingConversation);
         }
     };
 

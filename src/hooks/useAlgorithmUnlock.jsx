@@ -49,42 +49,37 @@ export const useAlgorithmUnlock = () => {
     }, []);
 
     const unlockAlgorithm = useCallback((algorithmId) => {
-        console.log('🔓 unlockAlgorithm called with:', algorithmId);
-        
         setUnlockedAlgorithms(prev => {
             const newUnlocked = new Set([...prev, algorithmId]);
-            console.log('🔓 New unlocked algorithms:', Array.from(newUnlocked));
             saveProgress(newUnlocked, completedAlgorithms, completedConversations);
             return newUnlocked;
         });
     }, [completedAlgorithms, completedConversations, saveProgress]);
 
     const markAlgorithmCompleted = useCallback((algorithmId) => {
-        console.log('🎯 markAlgorithmCompleted called with:', algorithmId);
-        
         setCompletedAlgorithms(prev => {
             const newCompleted = new Set([...prev, algorithmId]);
             saveProgress(unlockedAlgorithms, newCompleted, completedConversations);
             return newCompleted;
         });
 
-        // For now, only handle BFS → DFS transition
-        if (algorithmId === 'bfs') {
-            console.log('🔄 BFS completed, setting DFS conversation as pending');
-            setPendingConversation('dfs');
+        const algorithmTransitions = {
+            'bfs': 'dfs',
+            'dfs': 'bidirectional',
+            'bidirectional': 'greedy',
+            'greedy': 'astar',
+            'astar': 'bidirectional-astar',
+            'bidirectional-astar': 'bidirectional-astar-lookup'
+        };
+
+        const nextAlgorithm = algorithmTransitions[algorithmId];
+        if (nextAlgorithm) {
+            unlockAlgorithm(nextAlgorithm);
+            setPendingConversation(nextAlgorithm);
         }
-        
-        // TODO: Add other algorithm transitions later
-        // const currentIndex = ALGORITHM_ORDER.indexOf(algorithmId);
-        // if (currentIndex >= 0 && currentIndex < ALGORITHM_ORDER.length - 1) {
-        //     const nextAlgorithm = ALGORITHM_ORDER[currentIndex + 1];
-        //     setPendingConversation(nextAlgorithm);
-        // }
-    }, [unlockedAlgorithms, completedConversations, saveProgress]);
+    }, [unlockedAlgorithms, completedConversations, saveProgress, unlockAlgorithm]);
 
     const completeConversation = useCallback((conversationId) => {
-        console.log('💬 completeConversation called with:', conversationId);
-        
         setCompletedConversations(prev => {
             const newCompleted = new Set([...prev, conversationId]);
             saveProgress(unlockedAlgorithms, completedAlgorithms, newCompleted);
@@ -92,23 +87,17 @@ export const useAlgorithmUnlock = () => {
         });
         setPendingConversation(null);
         
-        // Unlock the algorithm after its conversation is completed
         if (conversationId === 'welcome') {
-            console.log('🎬 Welcome conversation completed, unlocking BFS');
             unlockAlgorithm('bfs');
-        } else if (conversationId === 'dfs') {
-            console.log('🚀 DFS conversation completed, unlocking DFS');
-            unlockAlgorithm('dfs');
         }
-        // TODO: Add other algorithm unlocks later
     }, [unlockedAlgorithms, completedAlgorithms, saveProgress, unlockAlgorithm]);
 
     const handleAlgorithmClick = useCallback((algorithmId) => {
-        // For now, only handle BFS and DFS conversations
-        if (algorithmId === 'bfs' || algorithmId === 'dfs') {
+        const algorithmsWithConversations = ['bfs', 'dfs', 'bidirectional', 'greedy', 'astar', 'bidirectional-astar', 'bidirectional-astar-lookup'];
+        
+        if (algorithmsWithConversations.includes(algorithmId)) {
             setPendingConversation(algorithmId);
         }
-        // TODO: Add other algorithm conversations later
     }, []);
 
     const resetProgress = useCallback(() => {
@@ -138,15 +127,7 @@ export const useAlgorithmUnlock = () => {
         return completedAlgorithms.has(algorithmId);
     }, [completedAlgorithms]);
 
-    // Debug logging
-    useEffect(() => {
-        console.log('📊 Algorithm state update:', {
-            unlockedAlgorithms: Array.from(unlockedAlgorithms),
-            completedAlgorithms: Array.from(completedAlgorithms),
-            completedConversations: Array.from(completedConversations),
-            pendingConversation
-        });
-    }, [unlockedAlgorithms, completedAlgorithms, completedConversations, pendingConversation]);
+
 
     return {
         unlockedAlgorithms: Array.from(unlockedAlgorithms),
