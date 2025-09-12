@@ -47,6 +47,7 @@ function Map({ onShowIntro }) {
 
     useEffect(() => {
         if (animationEnded && started) {
+            console.log('🏁 Algorithm animation ended:', settings.algorithm);
             // Mark algorithm as completed when it finishes
             algorithmUnlock.markAlgorithmCompleted(settings.algorithm);
         }
@@ -151,6 +152,12 @@ function Map({ onShowIntro }) {
             setPlaybackOn(!playbackOn);
             return;
         }
+        // Mark algorithm as completed if it was running and we're pausing it
+        if (started && !animationEnded) {
+            console.log('⏸️ Algorithm paused/stopped via toggleAnimation:', settings.algorithm);
+            algorithmUnlock.markAlgorithmCompleted(settings.algorithm);
+        }
+        
         setStarted(!started);
         if(started) {
             previousTimeRef.current = null;
@@ -158,6 +165,12 @@ function Map({ onShowIntro }) {
     }
 
     function clearPath() {
+        // Mark algorithm as completed if it was running (for unlocking next algorithm)
+        if (started && !animationEnded) {
+            console.log('⏹️ Algorithm manually stopped:', settings.algorithm);
+            algorithmUnlock.markAlgorithmCompleted(settings.algorithm);
+        }
+        
         setStarted(false);
         setTripsData([]);
         setTime(0);
@@ -408,8 +421,8 @@ function Map({ onShowIntro }) {
             />
 
             <GeoButton
-                currentAlgorithm={settings.algorithm}
-                algorithmState={started ? 'running' : animationEnded ? 'completed' : 'idle'}
+                pendingConversation={algorithmUnlock.pendingConversation}
+                onConversationComplete={algorithmUnlock.completeConversation}
                 onAlgorithmUnlock={algorithmUnlock.unlockAlgorithm}
             />
             <div className="attrib-container"><summary className="maplibregl-ctrl-attrib-button" title="Toggle attribution" aria-label="Toggle attribution"></summary><div className="maplibregl-ctrl-attrib-inner">© <a href="https://carto.com/about-carto/" target="_blank" rel="noopener">CARTO</a>, © <a href="http://www.openstreetmap.org/about/" target="_blank">OpenStreetMap</a> contributors</div></div>

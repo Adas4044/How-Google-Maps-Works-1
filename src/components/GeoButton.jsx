@@ -2,86 +2,96 @@ import { useState } from 'react';
 import { Fab, Zoom } from '@mui/material';
 import GeoIntroduction from './GeoIntroduction';
 
-const GeoButton = ({ currentAlgorithm, algorithmState, onAlgorithmUnlock }) => {
+const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnlock }) => {
     const [showExplanation, setShowExplanation] = useState(false);
 
-    const getExplanationContent = () => {
-        const algorithmExplanations = {
+    const getConversationContent = (conversationId) => {
+        const conversations = {
+            'welcome': {
+                title: "Welcome to Pathfinding! 🗺️",
+                explanation: "Hi! I'm Geo, your guide to understanding how Google Maps works! Today we'll explore the algorithms that power navigation apps.",
+                nextInfo: "First, set two points on the map by clicking, then we'll start with the most basic algorithm - BFS (Breadth-First Search).",
+                unlockAlgorithm: 'bfs'
+            },
             'bfs': {
                 title: "BFS (Breadth-First Search) 🌊",
-                explanation: "BFS explores like ripples in a pond - expanding outward in all directions equally. It guarantees the shortest path if all roads have the same cost.",
-                drawbacks: "BFS can be slow because it explores everywhere, even paths going away from the destination. It treats all roads equally.",
-                nextAlgorithm: "dfs",
-                nextInfo: "Next, try DFS (Depth-First Search) - it dives deep down one path instead of expanding outward."
+                explanation: "Let's start with the most basic approach: Breadth-First Search. Imagine dropping a stone in a pond - the ripples expand outward evenly in all directions.",
+                nextInfo: "BFS explores every possible path layer by layer. It guarantees the shortest path if all roads have the same cost. Try it now!",
+                unlockAlgorithm: 'bfs'
             },
             'dfs': {
                 title: "DFS (Depth-First Search) 🕳️",
-                explanation: "DFS dives deep down one path until it hits a dead end, then backtracks. It's like exploring a maze by always taking the first available turn.",
-                drawbacks: "DFS can get lost exploring very long paths that lead nowhere. It might miss shorter routes because it doesn't explore systematically.",
-                nextAlgorithm: "bidirectional",
-                nextInfo: "Next, try Bidirectional BFS - it searches from both start and end simultaneously to meet in the middle."
+                explanation: "Now let's try a completely different approach. What if we just dove deep down one path until we hit a dead end, then backtrack?",
+                nextInfo: "DFS is like your uncle driving through a foreign country, taking random turns hoping to find the destination. It can work, but it might take forever!",
+                unlockAlgorithm: 'dfs'
             },
             'bidirectional': {
                 title: "Bidirectional BFS 🔄",
-                explanation: "This runs BFS from both the start and goal simultaneously. When the two search areas meet, you've found the path!",
-                drawbacks: "While faster than regular BFS, it still explores uniformly in all directions from both ends.",
-                nextAlgorithm: "greedy",
-                nextInfo: "Next, try Greedy Search - it adds direction by always moving toward the goal."
+                explanation: "Let's go back to BFS and improve it. What if we start searching from both the start AND the goal? They meet in the middle!",
+                nextInfo: "This is like two people walking toward each other instead of one person making the whole trip. Much faster!",
+                unlockAlgorithm: 'bidirectional'
             },
             'greedy': {
                 title: "Greedy Search 🍟",
-                explanation: "Greedy always chooses the path that looks closest to the goal (like heading toward McDonald's). It uses the straight-line distance as a guide.",
-                drawbacks: "Greedy can get stuck in loops or take longer routes because it's too focused on the immediate goal direction.",
-                nextAlgorithm: "astar",
-                nextInfo: "Next, try A* - it combines Greedy's direction with BFS's systematic approach."
+                explanation: "What if we added some direction? Imagine you're at home and want to go to McDonald's - you already know which way it is, so just head there!",
+                nextInfo: "Greedy Search always chooses the path that looks closest to the goal. It's fast and intuitive, but can it handle tricky situations?",
+                unlockAlgorithm: 'greedy'
             },
             'astar': {
                 title: "A* Search 🧠",
-                explanation: "A* is like Greedy with a brain. It balances the cost to reach a point (g) with the estimated distance to goal (h). Formula: f(n) = g(n) + h(n).",
-                drawbacks: "A* is quite efficient, but we can make it even faster by running it from both ends!",
-                nextAlgorithm: "bidirectional-astar",
-                nextInfo: "Next, try Bidirectional A* - A* running from both start and goal simultaneously."
+                explanation: "Greedy Search has a problem - it can get stuck in loops. That's why most systems use A* - think of it as Greedy Search with a brain!",
+                nextInfo: "A* balances two things: how far you've traveled (g) and how far you still need to go (h). Formula: f(n) = g(n) + h(n). Try it!",
+                unlockAlgorithm: 'astar'
             },
             'bidirectional-astar': {
                 title: "Bidirectional A* ⚡",
-                explanation: "This runs A* from both start and goal, combining the best of A* intelligence with bidirectional speed.",
-                drawbacks: "Even this can be optimized! Real systems like Google Maps use precomputed shortcuts.",
-                nextAlgorithm: "bidirectional-astar-lookup",
-                nextInfo: "Finally, try A* + Lookup Table - it uses precomputed highway shortcuts for even faster routing."
+                explanation: "We made BFS faster with bidirectional search. Can we do the same for A*? Absolutely! Run A* from both ends simultaneously.",
+                nextInfo: "This combines A*'s intelligence with bidirectional speed. It's getting close to what real navigation systems use!",
+                unlockAlgorithm: 'bidirectional-astar'
             },
             'bidirectional-astar-lookup': {
                 title: "A* + Lookup Table 🛣️",
-                explanation: "This is how Google Maps works! It precomputes major routes (highways) and only calculates local roads in real-time.",
-                drawbacks: "This is the most advanced algorithm - you've mastered them all!",
-                nextAlgorithm: null,
-                nextInfo: "Congratulations! You've learned how Google Maps finds the fastest routes. Try experimenting with different map areas!"
+                explanation: "How does Google Maps answer so fast? The secret is precomputation! Instead of calculating everything on the fly, it stores shortcuts for major routes.",
+                nextInfo: "Highways connect distant places quickly, so precompute those paths and only calculate local roads in real-time. This is how Google Maps really works!",
+                unlockAlgorithm: 'bidirectional-astar-lookup'
             }
         };
 
-        return algorithmExplanations[currentAlgorithm] || {
-            title: "Welcome to Pathfinding! 🗺️",
-            explanation: "Hi! I'm Geo, your guide to understanding how Google Maps works! I'll explain each algorithm after you try it.",
-            drawbacks: "First, set two points on the map by clicking. Then try BFS (Breadth-First Search) - it's the most basic algorithm and perfect for beginners.",
-            nextAlgorithm: null,
-            nextInfo: "Click the BFS button at the bottom to get started, then click me again for explanations!"
-        };
+        return conversations[conversationId] || conversations['welcome'];
     };
 
     const handleGeoClick = () => {
-        setShowExplanation(true);
+        console.log('🎭 Geo button clicked, pendingConversation:', pendingConversation);
+        try {
+            if (pendingConversation) {
+                const content = getConversationContent(pendingConversation);
+                console.log('📝 Conversation content:', content);
+            }
+            setShowExplanation(true);
+        } catch (error) {
+            console.error('Error in handleGeoClick:', error);
+        }
     };
 
     const handleClose = () => {
         setShowExplanation(false);
-        const content = getExplanationContent();
-        if (content.nextAlgorithm && onAlgorithmUnlock) {
-            onAlgorithmUnlock(content.nextAlgorithm);
+        if (pendingConversation) {
+            try {
+                const content = getConversationContent(pendingConversation);
+                if (content.unlockAlgorithm && onAlgorithmUnlock) {
+                    onAlgorithmUnlock(content.unlockAlgorithm);
+                }
+                onConversationComplete(pendingConversation);
+            } catch (error) {
+                console.error('Error handling conversation completion:', error);
+                console.log('Pending conversation:', pendingConversation);
+            }
         }
     };
 
     return (
         <>
-            <Zoom in={true}>
+            <Zoom in={!!pendingConversation}>
                 <Fab
                     onClick={handleGeoClick}
                     style={{
@@ -89,11 +99,12 @@ const GeoButton = ({ currentAlgorithm, algorithmState, onAlgorithmUnlock }) => {
                         bottom: '100px',
                         right: '20px',
                         zIndex: 1000,
-                        backgroundColor: '#46B780',
+                        backgroundColor: pendingConversation ? '#46B780' : '#666',
                         width: '70px',
                         height: '70px',
-                        boxShadow: '0 8px 25px rgba(70, 183, 128, 0.4)',
-                        border: '3px solid rgba(255, 255, 255, 0.3)'
+                        boxShadow: pendingConversation ? '0 8px 25px rgba(70, 183, 128, 0.4)' : '0 4px 15px rgba(0, 0, 0, 0.3)',
+                        border: '3px solid rgba(255, 255, 255, 0.3)',
+                        animation: pendingConversation ? 'pulse 2s infinite' : 'none'
                     }}
                 >
                     <img 
@@ -109,14 +120,14 @@ const GeoButton = ({ currentAlgorithm, algorithmState, onAlgorithmUnlock }) => {
                 </Fab>
             </Zoom>
 
-            {showExplanation && (
+            {showExplanation && pendingConversation && (
                 <GeoIntroduction
                     event={{
                         character: 'geo',
                         characterImage: 'first.png',
                         dialogue: {
-                            title: getExplanationContent().title,
-                            message: `${getExplanationContent().explanation}\n\n${getExplanationContent().drawbacks}\n\n${getExplanationContent().nextInfo}`,
+                            title: getConversationContent(pendingConversation).title,
+                            message: `${getConversationContent(pendingConversation).explanation}\n\n${getConversationContent(pendingConversation).nextInfo}`,
                             hasNext: false,
                             isClosing: true
                         },

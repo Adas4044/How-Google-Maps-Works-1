@@ -25,6 +25,13 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
     // Use the algorithm unlock system to determine enabled algorithms
     const enabledAlgorithms = algorithmUnlock?.unlockedAlgorithms || ['bfs'];
 
+    const handleAlgorithmSelect = (algorithmId) => {
+        if (enabledAlgorithms.includes(algorithmId)) {
+            changeAlgorithm(algorithmId);
+            algorithmUnlock?.handleAlgorithmClick(algorithmId);
+        }
+    };
+
     // Expose showSnack to parent from ref
     useImperativeHandle(ref, () => ({
         showSnack(message, type = "error") {
@@ -188,7 +195,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
             <div className="algo-bar">
                 <Tooltip title="BFS">
                     <Button
-                        onClick={() => {changeAlgorithm("bfs");}}
+                        onClick={() => handleAlgorithmSelect("bfs")}
                         disabled={(!animationEnded && started) || !enabledAlgorithms.includes('bfs')}
                         variant={settings.algorithm === "bfs" ? "contained" : "outlined"}
                         style={{ 
@@ -208,7 +215,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
                 <Tooltip title="DFS">
                     <Button
-                        onClick={() => {changeAlgorithm("dfs");}}
+                        onClick={() => handleAlgorithmSelect("dfs")}
                         disabled={(!animationEnded && started) || !enabledAlgorithms.includes('dfs')}
                         variant={settings.algorithm === "dfs" ? "contained" : "outlined"}
                         style={{ 
@@ -228,7 +235,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
                 <Tooltip title="Bidirectional BFS">
                     <Button
-                        onClick={() => {changeAlgorithm("bidirectional");}}
+                        onClick={() => handleAlgorithmSelect("bidirectional")}
                         disabled={(!animationEnded && started) || !enabledAlgorithms.includes('bidirectional')}
                         variant={settings.algorithm === "bidirectional" ? "contained" : "outlined"}
                         style={{ 
@@ -248,7 +255,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
                 <Tooltip title="Greedy">
                     <Button
-                        onClick={() => {changeAlgorithm("greedy");}}
+                        onClick={() => handleAlgorithmSelect("greedy")}
                         disabled={(!animationEnded && started) || !enabledAlgorithms.includes('greedy')}
                         variant={settings.algorithm === "greedy" ? "contained" : "outlined"}
                         style={{ 
@@ -268,7 +275,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
                 <Tooltip title="A*">
                     <Button
-                        onClick={() => {changeAlgorithm("astar");}}
+                        onClick={() => handleAlgorithmSelect("astar")}
                         disabled={(!animationEnded && started) || !enabledAlgorithms.includes('astar')}
                         variant={settings.algorithm === "astar" ? "contained" : "outlined"}
                         style={{ 
@@ -288,7 +295,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
                 <Tooltip title="Bidirectional A*">
                     <Button
-                        onClick={() => {changeAlgorithm("bidirectional-astar");}}
+                        onClick={() => handleAlgorithmSelect("bidirectional-astar")}
                         disabled={(!animationEnded && started) || !enabledAlgorithms.includes('bidirectional-astar')}
                         variant={settings.algorithm === "bidirectional-astar" ? "contained" : "outlined"}
                         style={{ 
@@ -308,7 +315,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
                 <Tooltip title="A* + Lookup Table">
                     <Button
-                        onClick={() => {changeAlgorithm("bidirectional-astar-lookup");}}
+                        onClick={() => handleAlgorithmSelect("bidirectional-astar-lookup")}
                         disabled={(!animationEnded && started) || !enabledAlgorithms.includes('bidirectional-astar-lookup')}
                         variant={settings.algorithm === "bidirectional-astar-lookup" ? "contained" : "outlined"}
                         style={{ 
@@ -401,7 +408,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                         <Select
                             labelId="algo-select"
                             value={settings.algorithm}
-                            onChange={e => {changeAlgorithm(e.target.value);}}
+                            onChange={e => {handleAlgorithmSelect(e.target.value);}}
                             required
                             style={{ backgroundColor: "#404156", color: "#fff", width: "100%", paddingLeft: 1 }}
                             inputProps={{MenuProps: {MenuListProps: {sx: {backgroundColor: "#404156"}}}}}
