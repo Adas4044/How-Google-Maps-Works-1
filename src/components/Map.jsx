@@ -11,6 +11,7 @@ import PathfindingState from "../models/PathfindingState";
 import Interface from "./Interface";
 import LookupTablePanel from "./LookupTablePanel";
 import GeoButton from "./GeoButton";
+import InstructionBox from "./InstructionBox";
 import { INITIAL_COLORS, INITIAL_VIEW_STATE, MAP_STYLE } from "../config";
 import useSmoothStateChange from "../hooks/useSmoothStateChange";
 import { useAlgorithmUnlock } from "../hooks/useAlgorithmUnlock";
@@ -33,6 +34,7 @@ function Map({ onShowIntro }) {
     const [colors, setColors] = useState(INITIAL_COLORS);
     const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
     const [lookupTable, setLookupTable] = useState(null);
+    const [showInstructions, setShowInstructions] = useState(false);
     const ui = useRef();
     const fadeRadius = useRef();
     const requestRef = useRef();
@@ -44,6 +46,12 @@ function Map({ onShowIntro }) {
     const traceNode2 = useRef(null);
     const selectionRadiusOpacity = useSmoothStateChange(0, 0, 1, 400, fadeRadius.current, fadeRadiusReverse);
     const algorithmUnlock = useAlgorithmUnlock();
+
+    useEffect(() => {
+        if (startNode && endNode) {
+            setShowInstructions(false);
+        }
+    }, [startNode, endNode]);
 
     useEffect(() => {
         if (animationEnded && started) {
@@ -135,6 +143,7 @@ function Map({ onShowIntro }) {
             clearPath();
             state.current.start(settings.algorithm, settings.radius);
             setStarted(true);
+            setShowInstructions(false);
         }, 400);
     }
 
@@ -416,9 +425,16 @@ function Map({ onShowIntro }) {
 
             <GeoButton
                 pendingConversation={algorithmUnlock.pendingConversation}
-                onConversationComplete={algorithmUnlock.completeConversation}
+                onConversationComplete={(conversationId) => {
+                    algorithmUnlock.completeConversation(conversationId);
+                    if (conversationId === 'welcome') {
+                        setShowInstructions(true);
+                    }
+                }}
                 onAlgorithmUnlock={algorithmUnlock.unlockAlgorithm}
             />
+
+            <InstructionBox show={showInstructions} />
             <div className="attrib-container"><summary className="maplibregl-ctrl-attrib-button" title="Toggle attribution" aria-label="Toggle attribution"></summary><div className="maplibregl-ctrl-attrib-inner">© <a href="https://carto.com/about-carto/" target="_blank" rel="noopener">CARTO</a>, © <a href="http://www.openstreetmap.org/about/" target="_blank">OpenStreetMap</a> contributors</div></div>
         </>
     );
