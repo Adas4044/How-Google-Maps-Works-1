@@ -13,7 +13,7 @@ import LookupTablePanel from "./LookupTablePanel";
 import { INITIAL_COLORS, INITIAL_VIEW_STATE, MAP_STYLE } from "../config";
 import useSmoothStateChange from "../hooks/useSmoothStateChange";
 
-function Map() {
+function Map({ onShowIntro }) {
     const [startNode, setStartNode] = useState(null);
     const [endNode, setEndNode] = useState(null);
     const [selectionRadius, setSelectionRadius] = useState([]);
@@ -389,6 +389,7 @@ function Map() {
                 placeEnd={placeEnd}
                 setPlaceEnd={setPlaceEnd}
                 changeRadius={changeRadius}
+                showIntroScreen={onShowIntro}
             />
             <div className="attrib-container"><summary className="maplibregl-ctrl-attrib-button" title="Toggle attribution" aria-label="Toggle attribution"></summary><div className="maplibregl-ctrl-attrib-inner">© <a href="https://carto.com/about-carto/" target="_blank" rel="noopener">CARTO</a>, © <a href="http://www.openstreetmap.org/about/" target="_blank">OpenStreetMap</a> contributors</div></div>
         </>

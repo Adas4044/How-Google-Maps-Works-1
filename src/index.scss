@@ -6,6 +6,99 @@ body {
     overflow: hidden;
 }
 
+.intro-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #111;
+    z-index: 10000;
+    
+    video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        z-index: -1;
+        filter: brightness(0.7);
+    }
+    
+    .intro-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+        padding: 20px;
+        
+        .intro-card {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 16px;
+            padding: 48px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 800px;
+            
+            h1 {
+                color: #fff;
+                font-weight: bold;
+                margin-bottom: 16px;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                font-size: 3rem;
+                
+                @media (max-width: 768px) {
+                    font-size: 2rem;
+                }
+            }
+            
+            p {
+                color: #e0e0e0;
+                font-size: 1.25rem;
+                margin-bottom: 32px;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+                
+                @media (max-width: 768px) {
+                    font-size: 1rem;
+                }
+            }
+            
+            button {
+                background-color: #46B780;
+                color: #fff;
+                font-size: 1.5rem;
+                font-weight: bold;
+                padding: 16px 48px;
+                border-radius: 50px;
+                text-transform: none;
+                box-shadow: 0 8px 24px rgba(70, 183, 128, 0.4);
+                transition: all 0.3s ease;
+                border: none;
+                cursor: pointer;
+                
+                &:hover {
+                    background-color: #3da66b;
+                    transform: translateY(-2px);
+                    box-shadow: 0 12px 32px rgba(70, 183, 128, 0.6);
+                }
+                
+                @media (max-width: 768px) {
+                    font-size: 1.25rem;
+                    padding: 12px 32px;
+                }
+            }
+        }
+    }
+}
+
 canvas {
     min-height: 100vh;
 }
