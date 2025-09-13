@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Fab, Zoom } from '@mui/material';
 import GeoIntroduction from './GeoIntroduction';
 
 const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnlock, onShowGoogleMaps }) => {
     const [showExplanation, setShowExplanation] = useState(false);
+    const [showClickHere, setShowClickHere] = useState(false);
 
     const getConversationContent = (conversationId) => {
         if (!conversationId) {
@@ -90,8 +91,15 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
         return conversation;
     };
 
+    useEffect(() => {
+        if (pendingConversation === 'welcome') {
+            setShowClickHere(true);
+        }
+    }, [pendingConversation]);
+
     const handleGeoClick = () => {
         setShowExplanation(true);
+        setShowClickHere(false);
     };
 
     const handleClose = () => {
@@ -147,6 +155,38 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                     />
                 </Fab>
             </Zoom>
+
+            {showClickHere && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: '115px',
+                    right: '105px',
+                    backgroundColor: '#46B780',
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '20px',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    zIndex: 1001,
+                    boxShadow: '0 4px 15px rgba(70, 183, 128, 0.4)',
+                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                    animation: 'pulse 2s infinite',
+                    pointerEvents: 'none'
+                }}>
+                    Click Here
+                    <div style={{
+                        position: 'absolute',
+                        right: '-8px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '0',
+                        height: '0',
+                        borderTop: '8px solid transparent',
+                        borderBottom: '8px solid transparent',
+                        borderLeft: '8px solid #46B780'
+                    }} />
+                </div>
+            )}
 
             {showExplanation && pendingConversation && (() => {
                 try {
