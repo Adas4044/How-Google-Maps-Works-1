@@ -5,6 +5,7 @@ import GeoIntroduction from './GeoIntroduction';
 const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnlock, onShowGoogleMaps }) => {
     const [showExplanation, setShowExplanation] = useState(false);
     const [showClickHere, setShowClickHere] = useState(false);
+    const [currentPanel, setCurrentPanel] = useState(0); // 0 for first panel, 1 for second panel
 
     const getConversationContent = (conversationId) => {
         if (!conversationId) {
@@ -22,7 +23,14 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                 explanation: "Hi! I'm Geo, your guide to understanding how Google Maps works! Today we'll explore the algorithms that power navigation apps.",
                 nextInfo: "First, set two points on the map by clicking, then right clicking. We'll start with the most basic algorithm - BFS (Breadth-First Search).",
                 unlockAlgorithm: 'bfs',
-                characterImage: 'first.png'
+                characterImage: 'first.png',
+                hasNext: true,
+                nextPanel: {
+                    title: "BFS (Breadth-First Search)",
+                    explanation: "BFS explores nodes level by level, like ripples spreading in water. It guarantees the shortest path if all edges have the same cost, but it wastes time checking everything equally.",
+                    nextInfo: "Imagine dropping a stone in a pond - the ripples expand outward evenly. Try it now!",
+                    characterImage: 'first.png'
+                }
             },
             'bfs': {
                 title: "BFS (Breadth-First Search)",
@@ -100,6 +108,7 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
     const handleGeoClick = () => {
         setShowExplanation(true);
         setShowClickHere(false);
+        setCurrentPanel(0); // Reset to first panel
     };
 
     const handleClose = () => {
@@ -193,21 +202,45 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
                     const content = getConversationContent(pendingConversation);
                     if (!content) return null;
                     
+                    // Determine which content to show based on current panel
+                    let displayContent = content;
+                    let hasNext = false;
+                    let isLastPanel = true;
+                    
+                    if (content.hasNext && content.nextPanel) {
+                        if (currentPanel === 0) {
+                            // Show first panel
+                            hasNext = true;
+                            isLastPanel = false;
+                        } else {
+                            // Show second panel
+                            displayContent = {
+                                title: content.nextPanel.title,
+                                explanation: content.nextPanel.explanation,
+                                nextInfo: content.nextPanel.nextInfo,
+                                characterImage: content.nextPanel.characterImage,
+                                unlockAlgorithm: content.unlockAlgorithm // Keep the unlock from the main content
+                            };
+                            hasNext = false;
+                            isLastPanel = true;
+                        }
+                    }
+                    
                     return (
                         <GeoIntroduction
                             event={{
                                 character: 'geo',
-                                characterImage: content.characterImage || 'first.png',
+                                characterImage: displayContent.characterImage || 'first.png',
                                 dialogue: {
-                                    title: content.title || 'Conversation',
-                                    message: `${content.explanation || ''}\n\n${content.nextInfo || ''}`,
-                                    hasNext: false,
-                                    isClosing: true
+                                    title: displayContent.title || 'Conversation',
+                                    message: `${displayContent.explanation || ''}\n\n${displayContent.nextInfo || ''}`,
+                                    hasNext: hasNext,
+                                    isClosing: isLastPanel
                                 },
                                 position: 'center',
                                 backdrop: true
                             }}
-                            onNext={() => {}}
+                            onNext={() => setCurrentPanel(1)}
                             onClose={handleClose}
                             onSkip={handleClose}
                         />

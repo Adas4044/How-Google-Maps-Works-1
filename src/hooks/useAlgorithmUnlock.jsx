@@ -70,20 +70,22 @@ export const useAlgorithmUnlock = () => {
             setPendingConversation(null);
             
             const conversationUnlocks = {
-                'welcome': 'bfs',
+                'welcome': null, // Welcome should trigger BFS conversation, not unlock BFS directly
+                'bfs': 'bfs',
                 'dfs': 'dfs',
                 'bidirectional': 'bidirectional',
                 'greedy': 'greedy',
                 'astar': 'astar',
                 'bidirectional-astar': 'bidirectional-astar',
-                'bidirectional-astar-lookup': 'bidirectional-astar-lookup',
-                'google-maps': 'google-maps'
+                'bidirectional-astar-lookup': 'bidirectional-astar-lookup'
             };
 
             const algorithmToUnlock = conversationUnlocks[conversationId];
             if (algorithmToUnlock) {
                 unlockAlgorithm(algorithmToUnlock);
             }
+            
+            // Welcome conversation now handles BFS as a second panel, no need for separate BFS conversation
         } catch (error) {
             console.error('Error in completeConversation:', error, 'conversationId:', conversationId);
             setPendingConversation(null);
@@ -97,9 +99,12 @@ export const useAlgorithmUnlock = () => {
                 return;
             }
 
-            const algorithmsWithConversations = ['bfs', 'dfs', 'bidirectional', 'greedy', 'astar', 'bidirectional-astar', 'bidirectional-astar-lookup', 'google-maps'];
+            // Only allow conversations for algorithms that aren't part of the main educational flow
+            // The main flow algorithms (bfs, dfs, bidirectional, greedy, astar, bidirectional-astar, bidirectional-astar-lookup) 
+            // should only show conversations during the educational sequence, not when clicked
+            const clickableConversationAlgorithms = ['google-maps'];
             
-            if (algorithmsWithConversations.includes(algorithmId) && unlockedAlgorithms.has(algorithmId)) {
+            if (clickableConversationAlgorithms.includes(algorithmId) && unlockedAlgorithms.has(algorithmId)) {
                 setPendingConversation(algorithmId);
             }
         } catch (error) {
