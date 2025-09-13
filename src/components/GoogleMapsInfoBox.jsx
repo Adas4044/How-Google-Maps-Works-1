@@ -74,7 +74,7 @@ const GoogleMapsInfoBox = ({ open, onClose }) => {
                 </Box>
 
                 <Typography variant="body2" style={{ marginTop: '20px', fontStyle: 'italic', textAlign: 'center', color: 'rgba(255, 255, 255, 0.9)' }}>
-                    You now have the knowledge to build the next generation of navigation systems!
+                      This project is based on and adapted from honzaap's original repository.
                 </Typography>
             </Paper>
         </Modal>
