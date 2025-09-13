@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "re
 import { INITIAL_COLORS, LOCATIONS } from "../config";
 import { arrayToRgb, rgbToArray } from "../helpers";
 
-const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, time, maxTime, settings, colors, loading, timeChanged, cinematic, placeEnd, changeRadius, changeAlgorithm, setPlaceEnd, setCinematic, setSettings, setColors, startPathfinding, toggleAnimation, clearPath, changeLocation, showIntroScreen, algorithmUnlock }, ref) => {
+const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, time, maxTime, settings, colors, loading, timeChanged, cinematic, placeEnd, changeRadius, changeAlgorithm, setPlaceEnd, setCinematic, setSettings, setColors, startPathfinding, toggleAnimation, clearPath, changeLocation, showIntroScreen, algorithmUnlock, onShowGoogleMaps }, ref) => {
     const [sidebar, setSidebar] = useState(false);
     const [snack, setSnack] = useState({
         open: false,
@@ -28,7 +28,9 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
     const handleAlgorithmSelect = (algorithmId) => {
         if (enabledAlgorithms.includes(algorithmId)) {
             if (algorithmId === 'google-maps') {
-                algorithmUnlock?.handleAlgorithmClick(algorithmId);
+                if (onShowGoogleMaps) {
+                    onShowGoogleMaps();
+                }
             } else {
                 changeAlgorithm(algorithmId);
                 algorithmUnlock?.handleAlgorithmClick(algorithmId);

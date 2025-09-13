@@ -424,6 +424,7 @@ function Map({ onShowIntro }) {
                 changeRadius={changeRadius}
                 showIntroScreen={onShowIntro}
                 algorithmUnlock={algorithmUnlock}
+                onShowGoogleMaps={() => setShowGoogleMapsInfo(true)}
             />
 
             <GeoButton
