@@ -100,8 +100,10 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
     };
 
     useEffect(() => {
-        if (pendingConversation === 'welcome') {
+        if (pendingConversation) {
             setShowClickHere(true);
+        } else {
+            setShowClickHere(false);
         }
     }, [pendingConversation]);
 
