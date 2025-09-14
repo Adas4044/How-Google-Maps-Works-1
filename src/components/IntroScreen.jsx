@@ -8,6 +8,7 @@ const IntroScreen = ({ onStart }) => {
     const [showSkipButton, setShowSkipButton] = useState(false);
     const [isSkipping, setIsSkipping] = useState(false);
     const videoRef = useRef(null);
+    const preloadVideoRef = useRef(null);
     const audioRef = useRef(null);
 
     useEffect(() => {
@@ -22,12 +23,39 @@ const IntroScreen = ({ onStart }) => {
         return () => window.removeEventListener('keydown', handleKeyPress);
     }, [phase, isSkipping]);
 
+    // Preload start.mp4 after intro4.mp4 loads
+    useEffect(() => {
+        if (videoRef.current && preloadVideoRef.current) {
+            const handleIntroLoaded = () => {
+                // Start preloading start.mp4
+                preloadVideoRef.current.src = './videos/start.mp4';
+                preloadVideoRef.current.load(); // Explicitly load the video
+                console.log('Started preloading start.mp4');
+            };
+
+            videoRef.current.addEventListener('loadeddata', handleIntroLoaded);
+            
+            return () => {
+                if (videoRef.current) {
+                    videoRef.current.removeEventListener('loadeddata', handleIntroLoaded);
+                }
+            };
+        }
+    }, []);
+
     const handleStart = () => {
         setShowContent(false);
         setPhase('transition');
         
         if (videoRef.current) {
-            videoRef.current.src = './videos/start.mp4';
+            // Use the preloaded video if available, otherwise fallback to direct loading
+            if (preloadVideoRef.current && preloadVideoRef.current.src) {
+                videoRef.current.src = preloadVideoRef.current.src;
+                console.log('Using preloaded start.mp4');
+            } else {
+                videoRef.current.src = './videos/start.mp4';
+                console.log('Fallback: Loading start.mp4 directly');
+            }
             videoRef.current.loop = false;
             videoRef.current.play();
             
@@ -110,6 +138,15 @@ const IntroScreen = ({ onStart }) => {
             >
                 <source src="./videos/intro4.mp4" type="video/mp4" />
             </video>
+
+            {/* Hidden preload video for start.mp4 */}
+            <video
+                ref={preloadVideoRef}
+                preload="auto"
+                muted
+                style={{ display: 'none' }}
+                onError={(e) => console.log('Preload video failed to load:', e)}
+            />
 
             <audio
                 ref={audioRef}
