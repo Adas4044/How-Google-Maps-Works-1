@@ -31,7 +31,7 @@ function Map({ onShowIntro }) {
     const [cinematic, setCinematic] = useState(false);
     const [placeEnd, setPlaceEnd] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [settings, setSettings] = useState({ algorithm: "bfs", radius: 4, speed: 5 });
+    const [settings, setSettings] = useState({ algorithm: "bfs", radius: 4, speed: 15 });
     const [colors, setColors] = useState(INITIAL_COLORS);
     const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
     const [lookupTable, setLookupTable] = useState(null);

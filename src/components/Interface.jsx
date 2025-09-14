@@ -18,6 +18,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
     const [helper, setHelper] = useState(false);
     const [menuAnchor, setMenuAnchor] = useState(null);
     const menuOpen = Boolean(menuAnchor);
+    const [showSpeedOnMain, setShowSpeedOnMain] = useState(true); // true = speed, false = playback
     const helperTime = useRef(4800);
     const rightDown = useRef(false);
     const leftDown = useRef(false);
@@ -123,10 +124,21 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
         <>
             <div className={`nav-top ${cinematic ? "cinematic" : ""}`}>
                 <div className="side slider-container">
-                    <Typography id="speed-slider" gutterBottom>
-                        Animation speed
-                    </Typography>
-                    <Slider min={1} max={30} value={settings.speed} onChange={e => { setSettings({...settings, speed: Number(e.target.value)}); }} className="slider" aria-labelledby="speed-slider" />
+                    {showSpeedOnMain ? (
+                        <>
+                            <Typography id="speed-slider" gutterBottom>
+                                Animation speed
+                            </Typography>
+                            <Slider min={1} max={30} value={settings.speed} onChange={e => { setSettings({...settings, speed: Number(e.target.value)}); }} className="slider" aria-labelledby="speed-slider" />
+                        </>
+                    ) : (
+                        <>
+                            <Typography id="playback-slider-main" gutterBottom>
+                                Animation playback
+                            </Typography>
+                            <Slider disabled={!animationEnded} value={animationEnded ? time : maxTime} min={animationEnded ? 0 : -1} max={maxTime} onChange={(e) => {timeChanged(Number(e.target.value));}} className="slider" aria-labelledby="playback-slider-main" />
+                        </>
+                    )}
                 </div>
                 <IconButton disabled={!canStart} onClick={handlePlay} style={{ backgroundColor: "#46B780", width: 60, height: 60 }} size="large">
                     {(!started || animationEnded && !playbackOn) 
@@ -510,10 +522,21 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                     </div>
 
                     <div className="side slider-container">
-                        <Typography id="playback-slider" >
-                            Animation playback
-                        </Typography>
-                        <Slider disabled={!animationEnded} value={animationEnded ? time : maxTime} min={animationEnded ? 0 : -1} max={maxTime} onChange={(e) => {timeChanged(Number(e.target.value));}} className="slider" aria-labelledby="playback-slider" style={{ marginBottom: 1 }} />
+                        {showSpeedOnMain ? (
+                            <>
+                                <Typography id="playback-slider" >
+                                    Animation playback
+                                </Typography>
+                                <Slider disabled={!animationEnded} value={animationEnded ? time : maxTime} min={animationEnded ? 0 : -1} max={maxTime} onChange={(e) => {timeChanged(Number(e.target.value));}} className="slider" aria-labelledby="playback-slider" style={{ marginBottom: 1 }} />
+                            </>
+                        ) : (
+                            <>
+                                <Typography id="speed-slider-settings" >
+                                    Animation speed
+                                </Typography>
+                                <Slider min={1} max={30} value={settings.speed} onChange={e => { setSettings({...settings, speed: Number(e.target.value)}); }} className="slider" aria-labelledby="speed-slider-settings" style={{ marginBottom: 1 }} />
+                            </>
+                        )}
                     </div>
 
                     <div className="styles-container">
@@ -639,6 +662,14 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             variant="contained" style={{ backgroundColor: "#ff6b6b", color: "#fff" }}
                         >
                             Unlock All Algorithms
+                        </Button>
+                        
+                        <Button onClick={() => {
+                            setShowSpeedOnMain(!showSpeedOnMain);
+                        }}
+                            variant="contained" style={{ backgroundColor: "#9c88ff", color: "#fff", marginTop: "8px" }}
+                        >
+                            {showSpeedOnMain ? "Show Playback on Main" : "Show Speed on Main"}
                         </Button>
                     </div>
                 </div>
