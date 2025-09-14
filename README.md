@@ -7,7 +7,7 @@ https://github.com/user-attachments/assets/e1f8880e-2fff-4b32-b859-ab3fee54a338
 
 
 ## Installation
-1. Clone repository to your local machine
+1. Clone the repository to your local machine
 2. Open terminal and `cd` into repository folder
 3. Run `npm install`
 4. Run `vite` or `npm run dev`
