@@ -75,6 +75,7 @@ const GoogleMapsInfoBox = ({ open, onClose }) => {
 
                 <Typography variant="body2" style={{ marginTop: '20px', fontStyle: 'italic', textAlign: 'center', color: 'rgba(255, 255, 255, 0.9)' }}>
                       This project is based on and adapted from honzaap's original repository.
+                      Made by Adam Kulikowski. Personal site: adamkulik.com
                 </Typography>
             </Paper>
         </Modal>
