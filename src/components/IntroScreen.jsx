@@ -124,6 +124,9 @@ const IntroScreen = ({ onStart }) => {
                 muted
                 loop={phase === 'intro'}
                 playsInline
+                controls={false}
+                preload="auto"
+                webkit-playsinline="true"
                 style={{
                     position: 'absolute',
                     top: '-10%',
@@ -135,6 +138,12 @@ const IntroScreen = ({ onStart }) => {
                     transform: 'scale(1.2)'
                 }}
                 onError={(e) => console.log('Video failed to load:', e)}
+                onCanPlay={() => {
+                    // Ensure video plays on mobile
+                    if (videoRef.current && videoRef.current.paused) {
+                        videoRef.current.play().catch(console.log);
+                    }
+                }}
             >
                 <source src="./videos/intro4.mp4" type="video/mp4" />
             </video>
@@ -205,13 +214,13 @@ const IntroScreen = ({ onStart }) => {
                         onClick={handleStart}
                         variant="contained"
                         size="large"
-                        startIcon={<Explore style={{ fontSize: '1.5rem' }} />}
+                        startIcon={<Explore style={{ fontSize: 'clamp(1.2rem, 3vw, 1.5rem)' }} />}
                         style={{
                             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                             color: '#fff',
-                            fontSize: '1.3rem',
+                            fontSize: 'clamp(1rem, 4vw, 1.3rem)',
                             fontWeight: '600',
-                            padding: '16px 40px',
+                            padding: 'clamp(12px, 3vw, 16px) clamp(24px, 8vw, 40px)',
                             borderRadius: '60px',
                             textTransform: 'none',
                             boxShadow: '0 12px 40px rgba(102, 126, 234, 0.4)',
@@ -220,7 +229,8 @@ const IntroScreen = ({ onStart }) => {
                             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                             position: 'relative',
                             overflow: 'hidden',
-                            display: showContent ? 'inline-flex' : 'none'
+                            display: showContent ? 'inline-flex' : 'none',
+                            minHeight: '44px' // iOS touch target recommendation
                         }}
                         onMouseEnter={(e) => {
                             e.target.style.transform = 'translateY(-3px) scale(1.05)';

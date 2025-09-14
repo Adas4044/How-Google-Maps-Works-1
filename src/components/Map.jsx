@@ -66,6 +66,52 @@ function Map({ onShowIntro }) {
 
 
 
+    // Touch handling for mobile devices
+    const touchStartTime = useRef(null);
+    const touchStartPos = useRef(null);
+    const longPressTimeout = useRef(null);
+    
+    const handleTouchStart = (e) => {
+        if (e.touches.length !== 1) return;
+        
+        touchStartTime.current = Date.now();
+        touchStartPos.current = {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
+        };
+        
+        // Set up long press detection (500ms)
+        longPressTimeout.current = setTimeout(() => {
+            // Simulate right click for long press
+            const coordinate = [e.lngLat?.lng || 0, e.lngLat?.lat || 0];
+            mapClick({coordinate}, {rightButton: true});
+        }, 500);
+    };
+    
+    const handleTouchEnd = (e) => {
+        if (longPressTimeout.current) {
+            clearTimeout(longPressTimeout.current);
+            longPressTimeout.current = null;
+        }
+        
+        const touchEndTime = Date.now();
+        const touchDuration = touchEndTime - (touchStartTime.current || 0);
+        
+        // If it was a quick tap (less than 500ms), treat as left click
+        if (touchDuration < 500 && touchStartPos.current) {
+            const deltaX = Math.abs(e.changedTouches[0].clientX - touchStartPos.current.x);
+            const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartPos.current.y);
+            
+            // Only trigger if finger didn't move much (not a swipe)
+            if (deltaX < 10 && deltaY < 10) {
+                // This will be handled by the regular onClick event
+            }
+        }
+        
+        touchStartTime.current = null;
+        touchStartPos.current = null;
+    };
+
     async function mapClick(e, info, radius = null) {
         if(started && !animationEnded) return;
 
@@ -328,7 +374,11 @@ function Map({ onShowIntro }) {
 
     return (
         <>
-            <div onContextMenu={(e) => { e.preventDefault(); }}>
+            <div 
+                onContextMenu={(e) => { e.preventDefault(); }}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+            >
                 <DeckGL
                     initialViewState={viewState}
                     controller={{ doubleClickZoom: false, keyboard: false }}
