@@ -70,13 +70,13 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
             'bidirectional-astar': {
                 title: "Bidirectional A*",
                 explanation: "By running A* from both the start and the goal, the search space shrinks even more. It’s just like what we did to optimize BFS!",
-                nextInfo: "Navigation systems love this trick because it’s fast *and* optimal.",
+                nextInfo: "Navigation systems use this trick because it’s fast *and* optimal.",
                 unlockAlgorithm: 'bidirectional-astar',
                 characterImage: 'smirk.png'
             },
             'bidirectional-astar-lookup': {
                 title: "A* + Lookup Table",
-                explanation: "Running a lot faster right? We're almost there! Real systems like Google Maps don’t calculate everything in real time. They precompute popular shortcuts that everyone uses (usually highways) in lookup tables to save compute power and only calculate the local streets dynamically. I made a lookup table here based on the points you would chose, but the real lookup tables are done for longer distances. Computing a lookup table for eevery short distance route out there would be an almost infinitely large table!",
+                explanation: "Running a lot faster right? We're almost there! Real systems like Google Maps don’t calculate everything in real time. They precompute popular shortcuts that everyone uses (usually highways) in lookup tables to save compute power and only calculate the local streets dynamically. I made a lookup table here based on the points you would chose, but the real lookup tables are done for longer distances. Computing a lookup table for every short distance route out there would be an almost infinitely large table!",
                 nextInfo: "The long distance lookup tables are what make Maps feels instant—you’re not waiting for math, just a quick lookup and some local fine-tuning.",
                 unlockAlgorithm: 'bidirectional-astar-lookup',
                 characterImage: 'beach.png'
