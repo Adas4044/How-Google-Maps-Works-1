@@ -3,6 +3,7 @@ import IntroScreen from "./IntroScreen";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useState, useEffect } from "react";
+import { Analytics } from '@vercel/analytics/react';
 
 const darkTheme = createTheme({
     palette: {
@@ -38,6 +39,7 @@ function App() {
             ) : (
                 <Map onShowIntro={handleShowIntro} />
             )}
+            <Analytics />
         </ThemeProvider>
     );
 }

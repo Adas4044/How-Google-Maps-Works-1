@@ -18,6 +18,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.14",
     "@mui/material": "^5.14.14",
+    "@vercel/analytics": "^1.5.0",
     "deck.gl": "^8.9.31",
     "maplibre-gl": "^3.5.0",
     "mui-color-input": "^2.0.1",
@@ -35,6 +36,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "terser": "^5.44.0",
     "vite": "^4.4.5"
   }
 }
