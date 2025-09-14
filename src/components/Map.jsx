@@ -37,6 +37,13 @@ function Map({ onShowIntro }) {
     const [lookupTable, setLookupTable] = useState(null);
     const [showInstructions, setShowInstructions] = useState(false);
     const [showGoogleMapsInfo, setShowGoogleMapsInfo] = useState(false);
+    
+    // Ensure BFS is always the default algorithm on load
+    useEffect(() => {
+        if (settings.algorithm !== "bfs") {
+            setSettings(prev => ({ ...prev, algorithm: "bfs" }));
+        }
+    }, []);
     const ui = useRef();
     const fadeRadius = useRef();
     const requestRef = useRef();

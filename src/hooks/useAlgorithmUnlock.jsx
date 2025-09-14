@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 const ALGORITHM_ORDER = ['bfs', 'dfs', 'bidirectional', 'greedy', 'astar', 'bidirectional-astar', 'bidirectional-astar-lookup'];
 
 export const useAlgorithmUnlock = () => {
-    const [unlockedAlgorithms, setUnlockedAlgorithms] = useState(new Set()); // Start with no algorithms
+    const [unlockedAlgorithms, setUnlockedAlgorithms] = useState(new Set(['bfs'])); // Start with BFS unlocked
     const [completedAlgorithms, setCompletedAlgorithms] = useState(new Set());
     const [completedConversations, setCompletedConversations] = useState(new Set());
     const [pendingConversation, setPendingConversation] = useState('welcome'); // Start with welcome
@@ -113,7 +113,7 @@ export const useAlgorithmUnlock = () => {
     }, [unlockedAlgorithms]);
 
     const resetProgress = useCallback(() => {
-        setUnlockedAlgorithms(new Set());
+        setUnlockedAlgorithms(new Set(['bfs'])); // Always keep BFS unlocked
         setCompletedAlgorithms(new Set());
         setCompletedConversations(new Set());
         setPendingConversation('welcome');
