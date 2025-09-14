@@ -329,7 +329,8 @@ function Map({ onShowIntro }) {
         if(!settings) return;
         const items = JSON.parse(settings);
 
-        setSettings(items.settings);
+        // Always force BFS as the algorithm on page reload, but keep other settings
+        setSettings({ ...items.settings, algorithm: "bfs" });
         setColors(items.colors);
     }, []);
 
