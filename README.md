@@ -6,6 +6,7 @@ A simple and fun website to help teach people how google maps works.
 https://github.com/user-attachments/assets/e1f8880e-2fff-4b32-b859-ab3fee54a338
 
 
+## Overview
 Original mapping software based on open source project by honzaap.
 All algorithms, chat features, and animations implemented and added by me.
 
