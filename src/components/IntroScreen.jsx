@@ -8,6 +8,7 @@ const IntroScreen = ({ onStart }) => {
     const [showSkipButton, setShowSkipButton] = useState(false);
     const [isSkipping, setIsSkipping] = useState(false);
     const videoRef = useRef(null);
+    const audioRef = useRef(null);
 
     useEffect(() => {
         const handleKeyPress = (e) => {
@@ -29,6 +30,13 @@ const IntroScreen = ({ onStart }) => {
             videoRef.current.src = './videos/start.mp4';
             videoRef.current.loop = false;
             videoRef.current.play();
+            
+            // Play geoVoice.mp3 when start.mp4 begins
+            if (audioRef.current) {
+                audioRef.current.play().catch(error => {
+                    console.log('Audio play failed:', error);
+                });
+            }
             
             setTimeout(() => {
                 setShowSkipButton(true);
@@ -55,6 +63,11 @@ const IntroScreen = ({ onStart }) => {
         
         if (videoRef.current) {
             videoRef.current.pause();
+        }
+        
+        // Stop the audio when skipping
+        if (audioRef.current) {
+            audioRef.current.pause();
         }
         
         setTimeout(() => {
@@ -97,6 +110,14 @@ const IntroScreen = ({ onStart }) => {
             >
                 <source src="./videos/intro4.mp4" type="video/mp4" />
             </video>
+
+            <audio
+                ref={audioRef}
+                preload="auto"
+                onError={(e) => console.log('Audio failed to load:', e)}
+            >
+                <source src="./geoVoice.mp3" type="audio/mpeg" />
+            </audio>
 
             <div style={{
                 position: 'absolute',
