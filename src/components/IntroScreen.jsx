@@ -1,12 +1,13 @@
 import { Button, Fade, Typography, Box, IconButton } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
-import { PlayArrow, Explore, SkipNext } from "@mui/icons-material";
+import { PlayArrow, Explore, SkipNext, VolumeOff, VolumeUp } from "@mui/icons-material";
 
 const IntroScreen = ({ onStart }) => {
     const [phase, setPhase] = useState('intro'); // 'intro', 'transition', 'complete'
     const [showContent, setShowContent] = useState(true);
     const [showSkipButton, setShowSkipButton] = useState(false);
     const [isSkipping, setIsSkipping] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
     const videoRef = useRef(null);
     const preloadVideoRef = useRef(null);
     const audioRef = useRef(null);
@@ -60,7 +61,7 @@ const IntroScreen = ({ onStart }) => {
             videoRef.current.play();
             
             // Play geoVoice.mp3 when start.mp4 begins
-            if (audioRef.current) {
+            if (audioRef.current && !isMuted) {
                 audioRef.current.play().catch(error => {
                     console.log('Audio play failed:', error);
                 });
@@ -101,6 +102,19 @@ const IntroScreen = ({ onStart }) => {
         setTimeout(() => {
             onStart();
         }, 300);
+    };
+
+    const toggleMute = () => {
+        setIsMuted(!isMuted);
+        if (audioRef.current) {
+            if (isMuted) {
+                audioRef.current.play().catch(error => {
+                    console.log('Audio play failed:', error);
+                });
+            } else {
+                audioRef.current.pause();
+            }
+        }
     };
 
     return (
@@ -290,6 +304,31 @@ const IntroScreen = ({ onStart }) => {
                     </Box>
                 </Fade>
             )}
+
+            {/* Mute button in bottom left corner */}
+            <Box
+                className="intro-mute-button"
+                style={{
+                    position: 'absolute',
+                    bottom: '20px',
+                    left: '20px',
+                    zIndex: 3
+                }}
+            >
+                <IconButton
+                    onClick={toggleMute}
+                    style={{
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        color: '#fff',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        padding: '12px'
+                    }}
+                    size="large"
+                >
+                    {isMuted ? <VolumeOff /> : <VolumeUp />}
+                </IconButton>
+            </Box>
 
             <style>
                 {`

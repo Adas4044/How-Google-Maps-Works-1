@@ -290,6 +290,53 @@ canvas {
     }
 }
 
+/* Mobile-friendly instruction box */
+@media (max-width: 768px) {
+    .instruction-box {
+        position: fixed !important;
+        bottom: 100px !important;
+        right: 10px !important;
+        left: 10px !important;
+        max-width: none !important;
+        margin: 0 auto;
+        
+        .instruction-content {
+            text-align: center;
+            
+            .random-points-button {
+                margin-top: 8px;
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    }
+}
+
+/* Mobile-friendly mute button in intro screen */
+@media (max-width: 768px) {
+    .intro-mute-button {
+        bottom: 15px !important;
+        left: 15px !important;
+        
+        .MuiIconButton-root {
+            padding: 10px !important;
+        }
+    }
+}
+
+/* Mobile touch improvements */
+@media (hover: none) and (pointer: coarse) {
+    .MuiButton-root, .MuiIconButton-root {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .algo-bar button {
+        min-height: 48px;
+        padding: 0 20px;
+    }
+}
+
 .side-drawer {
     transition: transform 500ms ease-out, opacity 300ms ease-in;
    

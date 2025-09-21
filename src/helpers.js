@@ -53,3 +53,33 @@ export function arrayToRgb(array) {
     const result = `rgb${array.length >= 4 ? "a" : ""}(${rgb.join(", ")})`;
     return result;
 }
+
+/**
+ * Generate a random point within a given radius from a center point
+ * @param {Object} centerNode - Node with lat and lon properties
+ * @param {Number} radiusKm - Radius in kilometers
+ * @returns {Object} - Object with lat and lon properties
+ */
+export function generateRandomPointInRadius(centerNode, radiusKm) {
+    // Convert radius from km to degrees (approximate)
+    const radiusInDegrees = radiusKm / 111.32; // 1 degree ≈ 111.32 km
+    
+    // Generate random angle and distance
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * radiusInDegrees;
+    
+    // Calculate new coordinates
+    const lat = centerNode.lat + (distance * Math.cos(angle));
+    const lon = centerNode.lon + (distance * Math.sin(angle) / Math.cos(centerNode.lat * Math.PI / 180));
+    
+    return { lat, lon };
+}
+
+/**
+ * Utility function to detect mobile devices
+ * @returns {Boolean} - True if mobile device
+ */
+export function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+}

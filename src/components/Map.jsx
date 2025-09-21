@@ -4,7 +4,7 @@ import maplibregl from "maplibre-gl";
 import { PolygonLayer, ScatterplotLayer } from "@deck.gl/layers";
 import { FlyToInterpolator } from "deck.gl";
 import { TripsLayer } from "@deck.gl/geo-layers";
-import { createGeoJSONCircle } from "../helpers";
+import { createGeoJSONCircle, generateRandomPointInRadius, isMobileDevice } from "../helpers";
 import { useEffect, useRef, useState } from "react";
 import { getBoundingBoxFromPolygon, getMapGraph, getNearestNode } from "../services/MapService";
 import PathfindingState from "../models/PathfindingState";
@@ -75,6 +75,11 @@ function Map({ onShowIntro }) {
 
     async function mapClick(e, info, radius = null) {
         if(started && !animationEnded) return;
+        
+        // Disable map clicking on mobile devices
+        if(isMobileDevice()) {
+            return;
+        }
 
         setFadeRadiusReverse(false);
         fadeRadius.current = true;
@@ -144,6 +149,82 @@ function Map({ onShowIntro }) {
             clearTimeout(loadingHandle);
             setLoading(false);
         });
+    }
+
+    // Select 2 random points for mobile and desktop users
+    async function selectRandomPoints() {
+        if(started && !animationEnded) return;
+
+        setFadeRadiusReverse(false);
+        fadeRadius.current = true;
+        clearPath();
+
+        const loadingHandle = setTimeout(() => {
+            setLoading(true);
+        }, 300);
+
+        try {
+            let startNodeToUse = startNode;
+            
+            // If no start node exists, generate one randomly within the current view
+            if (!startNodeToUse) {
+                // Use current view center as base for random start point
+                const viewCenter = {
+                    lat: viewState.latitude,
+                    lon: viewState.longitude
+                };
+                
+                // Generate random start point within view
+                const randomStartPoint = generateRandomPointInRadius(viewCenter, 2); // 2km radius from view center
+                const startNodeCandidate = await getNearestNode(randomStartPoint.lat, randomStartPoint.lon);
+                
+                if(!startNodeCandidate) {
+                    ui.current.showSnack("Failed to find a valid start point. Please try again.");
+                    clearTimeout(loadingHandle);
+                    setLoading(false);
+                    return;
+                }
+                
+                setStartNode(startNodeCandidate);
+                const circle = createGeoJSONCircle([startNodeCandidate.lon, startNodeCandidate.lat], settings.radius);
+                setSelectionRadius([{ contour: circle}]);
+                
+                // Fetch nodes inside the radius
+                const graph = await getMapGraph(getBoundingBoxFromPolygon(circle), startNodeCandidate.id);
+                state.current.graph = graph;
+                startNodeToUse = startNodeCandidate;
+            }
+            
+            // Generate a random end point within the radius of the start point
+            const randomEndPoint = generateRandomPointInRadius(startNodeToUse, settings.radius);
+            
+            // Get nearest node to the random end point
+            const endNodeCandidate = await getNearestNode(randomEndPoint.lat, randomEndPoint.lon);
+            if(!endNodeCandidate) {
+                ui.current.showSnack("Failed to find a valid end point. Please try again.");
+                clearTimeout(loadingHandle);
+                setLoading(false);
+                return;
+            }
+
+            const realEndNode = state.current.getNode(endNodeCandidate.id);
+            setEndNode(endNodeCandidate);
+            
+            clearTimeout(loadingHandle);
+            setLoading(false);
+
+            if(!realEndNode) {
+                ui.current.showSnack("An error occurred. Please try again.");
+                return;
+            }
+            state.current.endNode = realEndNode;
+            
+        } catch (error) {
+            console.error('Error selecting random points:', error);
+            ui.current.showSnack("Failed to select random points. Please try again.");
+            clearTimeout(loadingHandle);
+            setLoading(false);
+        }
     }
 
     // Start new pathfinding animation
@@ -447,7 +528,7 @@ function Map({ onShowIntro }) {
                 onShowGoogleMaps={() => setShowGoogleMapsInfo(true)}
             />
 
-            <InstructionBox show={showInstructions} />
+            <InstructionBox show={showInstructions} onSelectRandomPoints={selectRandomPoints} />
 
             <GoogleMapsInfoBox 
                 open={showGoogleMapsInfo}
