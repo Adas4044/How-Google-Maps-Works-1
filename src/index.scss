@@ -265,30 +265,42 @@ canvas {
     }
 
     @media (max-width: 768px) {
-        left: 8px;
+        left: 4px;
         transform: none;
-        right: 8px;
-        bottom: 8px;
+        right: 4px;
+        bottom: 4px;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 4px;
+        gap: 2px;
+        padding: 4px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
         
         button {
-            min-width: 65px;
-            padding: 0 6px;
-            font-size: 10px;
-            height: 32px;
-            border-radius: 16px;
+            min-width: 50px;
+            max-width: 55px;
+            padding: 0 4px;
+            font-size: 8px;
+            height: 24px;
+            border-radius: 12px;
+            min-height: 24px;
+            line-height: 1;
         }
     }
 
     @media (max-width: 560px) {
+        padding: 3px;
+        gap: 1px;
+        
         button {
-            min-width: 60px;
-            padding: 0 5px;
-            font-size: 9px;
-            height: 30px;
-            border-radius: 15px;
+            min-width: 45px;
+            max-width: 50px;
+            padding: 0 3px;
+            font-size: 7px;
+            height: 22px;
+            border-radius: 11px;
+            min-height: 22px;
         }
     }
 }
@@ -297,6 +309,11 @@ canvas {
 @media (max-width: 768px) {
     /* Hide mobile node placement controls */
     .mobile-controls {
+        display: none !important;
+    }
+    
+    /* Hide the top navigation (play button, sliders, clear path) on mobile */
+    .nav-top {
         display: none !important;
     }
     /* Move instruction box to top for mobile */
