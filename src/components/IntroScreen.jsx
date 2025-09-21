@@ -7,7 +7,7 @@ const IntroScreen = ({ onStart }) => {
     const [showContent, setShowContent] = useState(true);
     const [showSkipButton, setShowSkipButton] = useState(false);
     const [isSkipping, setIsSkipping] = useState(false);
-    const [isMuted, setIsMuted] = useState(false);
+    const [isMuted, setIsMuted] = useState(true); // Audio off by default
     const videoRef = useRef(null);
     const preloadVideoRef = useRef(null);
     const audioRef = useRef(null);
