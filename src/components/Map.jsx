@@ -195,11 +195,33 @@ function Map({ onShowIntro }) {
                 startNodeToUse = startNodeCandidate;
             }
             
-            // Generate a random end point within the radius of the start point
-            const randomEndPoint = generateRandomPointInRadius(startNodeToUse, settings.radius);
+            // Generate a random end point within the radius but far from start point
+            let randomEndPoint;
+            let endNodeCandidate;
+            let attempts = 0;
+            const maxAttempts = 10;
+            const minDistanceRatio = 0.6; // At least 60% of the radius away from start
             
-            // Get nearest node to the random end point
-            const endNodeCandidate = await getNearestNode(randomEndPoint.lat, randomEndPoint.lon);
+            do {
+                randomEndPoint = generateRandomPointInRadius(startNodeToUse, settings.radius);
+                endNodeCandidate = await getNearestNode(randomEndPoint.lat, randomEndPoint.lon);
+                
+                if (endNodeCandidate) {
+                    // Calculate distance between start and end points
+                    const distance = Math.sqrt(
+                        Math.pow(endNodeCandidate.lat - startNodeToUse.lat, 2) + 
+                        Math.pow(endNodeCandidate.lon - startNodeToUse.lon, 2)
+                    );
+                    const radiusInDegrees = settings.radius / 111.32; // Convert km to degrees
+                    
+                    // Check if points are far enough apart
+                    if (distance >= radiusInDegrees * minDistanceRatio) {
+                        break; // Points are sufficiently far apart
+                    }
+                }
+                
+                attempts++;
+            } while (attempts < maxAttempts);
             if(!endNodeCandidate) {
                 ui.current.showSnack("Failed to find a valid end point. Please try again.");
                 clearTimeout(loadingHandle);
