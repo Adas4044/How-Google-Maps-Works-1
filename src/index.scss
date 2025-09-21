@@ -274,21 +274,21 @@ canvas {
         gap: 4px;
         
         button {
-            min-width: 85px;
-            padding: 0 8px;
-            font-size: 13px;
-            height: 36px;
-            border-radius: 18px;
+            min-width: 65px;
+            padding: 0 6px;
+            font-size: 10px;
+            height: 32px;
+            border-radius: 16px;
         }
     }
 
     @media (max-width: 560px) {
         button {
-            min-width: 75px;
-            padding: 0 6px;
-            font-size: 12px;
-            height: 34px;
-            border-radius: 17px;
+            min-width: 60px;
+            padding: 0 5px;
+            font-size: 9px;
+            height: 30px;
+            border-radius: 15px;
         }
     }
 }
@@ -297,11 +297,6 @@ canvas {
 @media (max-width: 768px) {
     /* Hide mobile node placement controls */
     .mobile-controls {
-        display: none !important;
-    }
-    
-    /* Hide the top navigation bar with play button on mobile */
-    .nav-top {
         display: none !important;
     }
     /* Move instruction box to top for mobile */
