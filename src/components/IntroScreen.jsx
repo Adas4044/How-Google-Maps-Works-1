@@ -1,6 +1,6 @@
 import { Button, Fade, Typography, Box, IconButton } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
-import { PlayArrow, Explore, SkipNext, VolumeOff, VolumeUp } from "@mui/icons-material";
+import { Explore, SkipNext, VolumeOff, VolumeUp } from "@mui/icons-material";
 
 const IntroScreen = ({ onStart }) => {
     const [phase, setPhase] = useState('intro'); // 'intro', 'transition', 'complete'

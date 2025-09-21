@@ -265,28 +265,30 @@ canvas {
     }
 
     @media (max-width: 768px) {
-        left: 12px;
+        left: 8px;
         transform: none;
-        right: 12px;
-        bottom: 12px;
+        right: 8px;
+        bottom: 8px;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 6px;
+        gap: 4px;
         
         button {
-            min-width: 85px;
-            padding: 0 8px;
-            font-size: 11px;
-            height: 36px;
+            min-width: 65px;
+            padding: 0 6px;
+            font-size: 10px;
+            height: 32px;
+            border-radius: 16px;
         }
     }
 
     @media (max-width: 560px) {
         button {
-            min-width: 90px;
-            padding: 0 8px;
-            font-size: 12px;
-            height: 40px;
+            min-width: 60px;
+            padding: 0 5px;
+            font-size: 9px;
+            height: 30px;
+            border-radius: 15px;
         }
     }
 }
@@ -393,17 +395,44 @@ canvas {
     
     /* Specific styles for geo introduction cards */
     .geo-intro-card {
-        max-width: calc(100vw - 20px) !important;
-        min-width: calc(100vw - 40px) !important;
-        max-height: 70vh !important;
-        overflow-y: auto !important;
+        max-width: calc(100% - 90px) !important;
+        min-width: calc(100% - 90px) !important;
+        width: calc(100% - 90px) !important;
+        max-height: 75vh !important;
+        overflow: hidden !important;
         -webkit-overflow-scrolling: touch;
-        margin: 10px !important;
+        margin: 0 !important;
+        padding: 12px 16px !important;
         
         .geo-intro-content {
-            padding: 16px !important;
-            max-height: 60vh !important;
+            padding: 0 !important;
+            max-height: 65vh !important;
             overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+            
+            /* Smaller text for mobile */
+            .MuiTypography-h6 {
+                font-size: 16px !important;
+                margin-bottom: 8px !important;
+                padding-right: 25px !important;
+            }
+            
+            .MuiTypography-body1 {
+                font-size: 14px !important;
+                line-height: 1.4 !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .MuiTypography-body2 {
+                font-size: 12px !important;
+                margin-bottom: 12px !important;
+            }
+            
+            /* Smaller buttons */
+            .MuiButton-root {
+                font-size: 12px !important;
+                padding: 6px 16px !important;
+            }
         }
     }
     
@@ -414,21 +443,31 @@ canvas {
         left: 50% !important;
         transform: translate(-50%, -50%) !important;
         z-index: 10000 !important;
-        max-width: calc(100vw - 10px) !important;
+        max-width: calc(100vw - 20px) !important;
         width: calc(100vw - 20px) !important;
-        max-height: 80vh !important;
+        max-height: 85vh !important;
+        padding: 10px !important;
+        box-sizing: border-box !important;
         
         .geo-character-image {
-            height: 100px !important;
+            height: 80px !important;
+            width: auto !important;
             margin-right: 8px !important;
             flex-shrink: 0 !important;
         }
         
-        /* Make the dialogue take up more space */
-        > div > div {
-            flex-direction: row !important;
-            align-items: flex-start !important;
+        /* Make the dialogue fit properly */
+        > div {
             width: 100% !important;
+            max-height: 100% !important;
+            overflow: visible !important;
+            
+            > div {
+                flex-direction: row !important;
+                align-items: flex-start !important;
+                width: 100% !important;
+                max-height: 100% !important;
+            }
         }
     }
 }
@@ -436,11 +475,14 @@ canvas {
 /* Mobile-friendly mute button in intro screen */
 @media (max-width: 768px) {
     .intro-mute-button {
-        bottom: 15px !important;
+        top: 15px !important;
         left: 15px !important;
+        bottom: unset !important;
         
         .MuiIconButton-root {
             padding: 10px !important;
+            width: 50px !important;
+            height: 50px !important;
         }
     }
 }
