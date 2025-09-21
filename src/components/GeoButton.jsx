@@ -168,7 +168,7 @@ const GeoButton = ({ pendingConversation, onConversationComplete, onAlgorithmUnl
             </Zoom>
 
             {showClickHere && (
-                <div style={{
+                <div className="geo-click-hint" style={{
                     position: 'fixed',
                     bottom: '115px',
                     right: '105px',

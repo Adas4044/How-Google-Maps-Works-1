@@ -290,15 +290,18 @@ canvas {
     }
 }
 
-/* Mobile-friendly instruction box */
+/* Mobile-only improvements */
 @media (max-width: 768px) {
+    /* Move instruction box to top for mobile */
     .instruction-box {
         position: fixed !important;
-        bottom: 100px !important;
-        right: 10px !important;
+        top: 80px !important;
         left: 10px !important;
+        right: 10px !important;
+        bottom: unset !important;
         max-width: none !important;
-        margin: 0 auto;
+        margin: 0;
+        z-index: 2000 !important;
         
         .instruction-content {
             text-align: center;
@@ -307,7 +310,110 @@ canvas {
                 margin-top: 8px;
                 width: 100%;
                 max-width: 200px;
+                font-size: 14px !important;
+                padding: 10px 20px !important;
+                font-weight: bold;
             }
+        }
+    }
+    
+    /* Move geo button to top right for mobile */
+    .MuiFab-root {
+        position: fixed !important;
+        top: 20px !important;
+        right: 20px !important;
+        bottom: unset !important;
+        width: 60px !important;
+        height: 60px !important;
+        z-index: 2001 !important;
+        
+        img {
+            width: 40px !important;
+            height: 40px !important;
+        }
+    }
+    
+    /* Adjust geo click hint for mobile */
+    .geo-click-hint {
+        position: fixed !important;
+        top: 30px !important;
+        right: 90px !important;
+        bottom: unset !important;
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+    }
+    
+    /* Make geo introduction boxes mobile-friendly */
+    .MuiDialog-paper, .geo-dialog {
+        margin: 10px !important;
+        max-height: 80vh !important;
+        max-width: calc(100vw - 20px) !important;
+        width: calc(100vw - 20px) !important;
+        overflow-y: auto !important;
+        
+        .MuiDialogContent-root {
+            padding: 12px !important;
+            max-height: 60vh !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .MuiDialogTitle-root {
+            padding: 12px !important;
+            font-size: 18px !important;
+        }
+        
+        .MuiDialogActions-root {
+            padding: 8px 12px !important;
+            
+            .MuiButton-root {
+                min-height: 44px !important;
+                font-size: 14px !important;
+                padding: 8px 16px !important;
+            }
+        }
+        
+        /* Make images responsive in dialog */
+        img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        /* Make text readable on mobile */
+        p, .MuiTypography-root {
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+        }
+    }
+    
+    /* Specific styles for geo introduction cards */
+    .geo-intro-card {
+        max-width: calc(100vw - 40px) !important;
+        max-height: 70vh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        margin: 20px !important;
+        
+        .geo-intro-content {
+            padding: 16px !important;
+            max-height: 60vh !important;
+            overflow-y: auto !important;
+        }
+    }
+    
+    /* Mobile positioning for geo introduction */
+    .geo-intro-container {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 10000 !important;
+        max-width: calc(100vw - 20px) !important;
+        max-height: 80vh !important;
+        
+        .geo-character-image {
+            height: 120px !important;
+            margin-right: 10px !important;
         }
     }
 }

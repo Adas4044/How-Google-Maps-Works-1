@@ -105,7 +105,7 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                 />
             )}
             
-            <div style={{...getPositionStyles(position), pointerEvents: 'auto'}}>
+            <div className="geo-intro-container" style={{...getPositionStyles(position), pointerEvents: 'auto'}}>
                 <Fade in={visible} timeout={400}>
                     <Box
                         style={{
@@ -117,6 +117,7 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                         }}
                     >
                         <img 
+                            className="geo-character-image"
                             src={`./pics/${event.characterImage || 'first.png'}`}
                             alt="Geo character"
                             style={{
@@ -129,6 +130,7 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                         />
                         
                         <Box
+                            className="geo-intro-card"
                             style={{
                                 background: 'linear-gradient(135deg, rgba(70, 183, 128, 0.95) 0%, rgba(46, 204, 113, 0.90) 100%)',
                                 borderRadius: '20px',
@@ -172,6 +174,7 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                                 }}
                             />
                             
+                            <div className="geo-intro-content">
                             <Typography
                                 variant="h6"
                                 style={{
@@ -284,6 +287,7 @@ const GeoIntroduction = ({ event, onNext, onClose, onSkip }) => {
                                     </Button>
                                 )}
                             </Box>
+                            </div>
                         </Box>
                     </Box>
                 </Fade>
